@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 
 const gameSchema = new mongoose.Schema({
   player_1_id: String,
+  player_1_username: String,
   player_2_id: String,
+  player_2_username: String,
   rounds: [
     {
       round_no: Number,
