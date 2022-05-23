@@ -4,6 +4,12 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   google_access_token: { type: String, unique: true },
   online: Boolean,
+  friends: [
+    {
+      friend_id: String,
+      friend_username: String,
+    },
+  ],
   badges: [
     {
       badge_type: String,
