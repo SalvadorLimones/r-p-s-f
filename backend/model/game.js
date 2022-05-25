@@ -1,25 +1,26 @@
 const mongoose = require("mongoose");
 
-const gameSchema = new mongoose.Schema({
-  player_1_id: String,
-  player_1_username: String,
-  player_2_id: String,
-  player_2_username: String,
-  rounds: [
-    {
-      round_no: Number,
-      player_1_pick: String,
-      player_1_future: String,
-      player_2_pick: String,
-      player_2_future: String,
-    },
-  ],
-  winner_id: String,
-  loser_id: String,
-  winner_score: Number,
-  loser_score: Number,
+const playerSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  username: { type: String, required: true },
+  winner: { type: Boolean, default: false },
+  score: { type: Number, default: 0 },
 });
 
-const Game = mongoose.model("Game", gameSchema);
+const roundSchema = new mongoose.Schema({
+  roundNo: { type: Number, required: true },
+  playerOnePick: { type: String, required: true },
+  playerOneFuture: { type: String, required: true },
+  playerTwoPick: { type: String, required: true },
+  playerTwoFuture: { type: String, required: true },
+});
+
+const gameSchema = new mongoose.Schema({
+  playerOne: [playerSchema],
+  playerTwo: [playerSchema],
+  rounds: [roundSchema],
+});
+
+const Game = mongoose.model("game", gameSchema);
 
 module.exports = Game;
