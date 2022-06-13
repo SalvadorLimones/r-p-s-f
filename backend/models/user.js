@@ -12,7 +12,11 @@ const badgeSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
-  googleID: { type: String, unique: true, required: true },
+  providers: {
+    google: { type: String, unique: true, sparse: true },
+    facebook: { type: String, unique: true, sparse: true },
+    github: { type: String, unique: true, sparse: true },
+  },
   online: Boolean,
   friends: [friendSchema],
   badges: [badgeSchema],
