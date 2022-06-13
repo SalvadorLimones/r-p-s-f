@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     github: { type: String, unique: true, sparse: true },
   },
   online: Boolean,
+  playing: Boolean,
   friends: [friendSchema],
   badges: [badgeSchema],
 });

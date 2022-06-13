@@ -32,13 +32,13 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   );
 
   if (!response) return res.sendStatus(500);
+  console.log(response.status);
   if (response.status !== 200) return res.sendStatus(401);
 
   let openId;
   const onlyOauth = !response.data.id_token;
 
   if (onlyOauth) {
-    //let token = response.data.split("=")[1].split("&")[0];
     let token = response.data.access_token;
     const userResponse = await http.post(
       config.auth[provider].user_endpoint,
@@ -61,27 +61,10 @@ router.post("/login", auth({ block: false }), async (req, res) => {
     openId = decoded.sub;
   }
 
-  /*   const user = await User.findOneAndUpdate(
-    { [key]: openId },
-    { providers: { [provider]: openId } },
-    { new: true, upsert: true }
-  ); */
-
-  //példa optional chainingre , b1 és c1 értéke ugyanaz (ha van user.profile.account.balance,akkor annak az értéke, ha nem, akkor null)
-  /*   const user = {
-    username: "Random",
-    profile: { id: "123456", account: { balance: 0, account_id: "bb" } },
-  };
-  const b1 =
-    user && user.profile && user.profile.account && user.profile.account.balance
-      ? user.profile.account.balance
-      : null;
-      
-      const c1 = user?.profile?.account?.balance; */
-
   //megkeresi a user-t, ha nincs csinál egyet:
   const key = "providers." + provider;
   let user = await User.findOne({ [key]: openId });
+  console.log("USER: ", user);
   if (user && res.locals.user?.providers) {
     user.providers = { ...user.providers, ...res.locals.user.providers };
     user = await user.save();
@@ -89,8 +72,8 @@ router.post("/login", auth({ block: false }), async (req, res) => {
 
   const sessionToken = jwt.sign(
     {
-      userId: user?._id, //optional chaning
-      providers: user ? user.providers : { [provider]: openId }, //OC itt nem jó, mert nem null-t adunk vissza
+      userId: user?._id,
+      providers: user ? user.providers : { [provider]: openId },
     },
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
