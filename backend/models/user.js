@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const friendSchema = new mongoose.Schema({
   friendId: { type: String, required: true },
   friendUsername: { type: String, required: true },
+  friendStatus: { type: Number, required: true }, //0 - he/she sent request; 1 - you've sent request; 2 - friends
 });
 
 const badgeSchema = new mongoose.Schema({
