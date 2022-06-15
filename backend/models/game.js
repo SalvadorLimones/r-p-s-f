@@ -18,6 +18,7 @@ const roundSchema = new mongoose.Schema({
 const gameSchema = new mongoose.Schema({
   playerOne: [playerSchema],
   playerTwo: [playerSchema],
+  championship: Boolean, // there are two type of games, championship and friendly
   rounds: [roundSchema],
 });
 

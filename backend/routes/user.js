@@ -5,6 +5,7 @@ const http = require("../utils/http");
 const { auth } = require("../middlewares/auth");
 const config = require("../app.config");
 
+//login
 router.post("/login", auth({ block: false }), async (req, res) => {
   const payload = req.body;
   if (!payload) return res.status(400).send("All inputs are required 1");
@@ -32,7 +33,6 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   );
 
   if (!response) return res.sendStatus(500);
-  console.log(response.status);
   if (response.status !== 200) return res.sendStatus(401);
 
   let openId;
@@ -64,9 +64,12 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   //megkeresi a user-t, ha nincs csinál egyet:
   const key = "providers." + provider;
   let user = await User.findOne({ [key]: openId });
-  console.log("USER: ", user);
-  if (user && res.locals.user?.providers) {
-    user.providers = { ...user.providers, ...res.locals.user.providers };
+
+  if (user) {
+    user.online = true;
+    if (res.locals.user?.providers) {
+      user.providers = { ...user.providers, ...res.locals.user.providers };
+    }
     user = await user.save();
   }
 
@@ -81,6 +84,7 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   res.json({ sessionToken });
 });
 
+//add a new user to database
 router.post("/create", auth({ block: true }), async (req, res) => {
   if (!req.body?.username) return res.sendStatus(400);
   const user = await User.create({
@@ -98,5 +102,33 @@ router.post("/create", auth({ block: true }), async (req, res) => {
   );
   res.json({ sessionToken });
 });
+
+//logout
+router.patch("/logout", async (req, res) => {
+  const id = req.body.userId;
+  if (!id) return res.status(400).send("All inputs are required!");
+
+  const user = await User.findById(id);
+  if (!user) return res.status(400).send("User not found!");
+
+  user.online = false;
+  user.save((err) => {
+    if (err) return res.status(500).send(err);
+  });
+
+  res.status(200).send("User logged out");
+});
+/* router.patch("/logout", auth({ block: true }), async (req, res) => {
+  if (res.locals.user?.userId) {
+    console.log(res.locals.user.userId);
+    const user = await User.findById(res.locals.user.userId);
+    if (!user) return res.status(404).send("User not found.");
+    user.online = false;
+    user.save((err) => {
+      if (err) return res.status(500).send(err);
+    });
+    res.status(200).send("User logged out");
+  }
+}); */
 
 module.exports = router;

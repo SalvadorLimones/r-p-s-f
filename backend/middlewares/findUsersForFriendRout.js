@@ -2,7 +2,7 @@ const User = require("../models/user");
 
 exports.find = () => async (req, res, next) => {
   const myId = res.locals.user.userId;
-  otherId = req.body.userId;
+  const otherId = req.body.userId;
 
   if (!(myId && otherId))
     return res.status(400).send("All inputs are required!");
