@@ -13,22 +13,17 @@ router.post("/add", auth({ block: true }), find(), async (req, res) => {
   }
 
   if (!myFriend) {
-    me.friends = {
-      ...me.friends,
-      ...{
-        friendId: otherId,
-        friendUsername: otherPlayer.username,
-        friendStatus: 1,
-      },
-    };
-    otherPlayer.friends = {
-      ...otherPlayer.friends,
-      ...{
-        friendId: myId,
-        friendUsername: me.username,
-        friendStatus: 0,
-      },
-    };
+    me.friends.push({
+      friendId: otherPlayer.id,
+      friendUsername: otherPlayer.username,
+      friendStatus: 1,
+    });
+
+    otherPlayer.friends.push({
+      friendId: me.id,
+      friendUsername: me.username,
+      friendStatus: 0,
+    });
   }
 
   if (myFriend?.friendStatus === 0) {
@@ -39,14 +34,14 @@ router.post("/add", auth({ block: true }), find(), async (req, res) => {
   me.save();
   otherPlayer.save();
 
-  return res.status(200).send("YAAAY!");
+  return res.status(200).send("YAAAY, you are friends now!");
 });
 
 //unfriend
 router.post("/remove", auth({ block: true }), find(), async (req, res) => {
   const { me, otherPlayer, myFriend, iAmFriend } = res.locals;
 
-  if (myFriend.friendStatus === 0 || !myFriend) {
+  if (myFriend?.friendStatus === 0 || !myFriend) {
     return res
       .status(400)
       .send(
@@ -55,9 +50,11 @@ router.post("/remove", auth({ block: true }), find(), async (req, res) => {
   }
 
   if (myFriend.friendStatus === 1) {
-    me.friends = me.friends.filter((friend) => friend.friendId !== otherId);
+    me.friends = me.friends.filter(
+      (friend) => friend.friendId !== otherPlayer.id
+    );
     otherPlayer.friends = otherPlayer.friends.filter(
-      (friend) => friend.friendId !== myId
+      (friend) => friend.friendId !== me.id
     );
   }
 
@@ -69,7 +66,7 @@ router.post("/remove", auth({ block: true }), find(), async (req, res) => {
   me.save();
   otherPlayer.save();
 
-  return res.status(200).send("YAAAY!");
+  return res.status(200).send(" You are not friends anymore! :(");
 });
 
 module.exports = router;

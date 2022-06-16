@@ -22,7 +22,7 @@ describe("/api/dashboards GET tests", () => {
   afterAll(async () => {
     await stopDb(connection, mongod);
   });
-
+  /* 
   test("returns an empty list for new users", async () => {
     //given
     const newUser = new User({
@@ -75,5 +75,5 @@ describe("/api/dashboards GET tests", () => {
     //then
     expect(response.status).toBe(200);
     expect(response.body.user).toBeNull();
-  });
+  }); */
 });

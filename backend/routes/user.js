@@ -103,8 +103,32 @@ router.post("/create", auth({ block: true }), async (req, res) => {
   res.json({ sessionToken });
 });
 
+//keep user logged in, log it out after 1 min, if no request received
+router.post("/loggedin", auth({ block: true }), async (req, res) => {
+  const user = await User.findById(res.locals.user.userId);
+  if (!user) return res.status(400).send("User not found!");
+
+  const logout = () => {
+    user.online = false;
+    user.save((err) => {
+      if (err) return res.status(500).send(err);
+    });
+  };
+  const oneMinuteTicker = () => setTimeout(logout, 60000);
+
+  user.online = true;
+  user.save((err) => {
+    if (err) return res.status(500).send(err);
+  });
+
+  clearTimeout(oneMinuteTicker);
+  oneMinuteTicker();
+
+  res.status(200).send("running...");
+});
+
 //logout
-router.patch("/logout", async (req, res) => {
+/* router.patch("/logout", async (req, res) => {
   const id = req.body.userId;
   if (!id) return res.status(400).send("All inputs are required!");
 
@@ -117,7 +141,7 @@ router.patch("/logout", async (req, res) => {
   });
 
   res.status(200).send("User logged out");
-});
+}); */
 /* router.patch("/logout", auth({ block: true }), async (req, res) => {
   if (res.locals.user?.userId) {
     console.log(res.locals.user.userId);
