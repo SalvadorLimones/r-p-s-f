@@ -15,4 +15,7 @@ const setupGoogleErrResponse = () => {
   mock.onPost("https://oauth2.googleapis.com/token").replyOnce(401);
 };
 
-module.exports = { setupGoogleSuccessResponse, setupGoogleErrResponse };
+module.exports = {
+  setupGoogleSuccessResponse,
+  setupGoogleErrResponse,
+};

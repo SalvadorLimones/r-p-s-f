@@ -65,11 +65,8 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   const key = "providers." + provider;
   let user = await User.findOne({ [key]: openId });
 
-  if (user) {
-    user.online = true;
-    if (res.locals.user?.providers) {
-      user.providers = { ...user.providers, ...res.locals.user.providers };
-    }
+  if (user && res.locals.user?.providers) {
+    user.providers = { ...user.providers, ...res.locals.user.providers };
     user = await user.save();
   }
 

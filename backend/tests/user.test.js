@@ -116,4 +116,82 @@ describe("/api/user/login test", () => {
     expect(response.status).toBe(401);
     expect(response.body).toStrictEqual({});
   });
+
+  test("a POST request to /create with no username in the request body returns error status 400", async () => {
+    //given
+    const googleUserId = "123456";
+    setupGoogleSuccessResponse(googleUserId);
+    const sessionToken = jwt.sign(
+      { userId: 123456, providers: {} },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+    client.set("authorization", sessionToken);
+
+    //when
+    const response = await client.post("/api/user/create").send({
+      notUsername: "notUsername",
+    });
+
+    //then
+    expect(response.status).toBe(400);
+  });
+
+  test("a POST request to /create with username in the request body returns status 200 and saves the user data in the DB", async () => {
+    //given
+    const googleUserId = "123456";
+    setupGoogleSuccessResponse(googleUserId);
+
+    const sessionToken = jwt.sign(
+      { userId: googleUserId, providers: { google: googleUserId } },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+    client.set("authorization", sessionToken);
+
+    //when
+    const response = await client.post("/api/user/create").send({
+      username: "Macska",
+    });
+
+    //then
+    expect(response.status).toBe(200);
+  });
+
+  test("a POST request to /loggedin with username in the request body returns status 200 and changes user's online status to true", async () => {
+    //given
+
+    await User.create({
+      username: "Macska",
+      providers: {
+        google: 123456,
+      },
+    });
+
+    const me = await User.findOne({ username: "Macska" });
+
+    const sessionToken = jwt.sign(
+      { userId: me._id, providers: me.providers },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    client.set("authorization", sessionToken);
+    const response = await client.post("/api/user/loggedin");
+
+    //when
+    const meAgain = await User.findOne({ username: "Macska" });
+
+    //then
+    expect(response.status).toBe(200);
+    expect(me.online).toBe(false);
+    expect(meAgain.online).toBe(true);
+    expect(response.text).toBe("running...");
+  });
 });

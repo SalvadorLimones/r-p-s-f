@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     facebook: { type: String, unique: true, sparse: true },
     github: { type: String, unique: true, sparse: true },
   },
-  online: Boolean,
+  online: { type: Boolean, default: false },
   available: Boolean, //for champipnship games
   friends: [friendSchema],
   playingStatus: Number, // 0 - he/she sent request; 1 - you've sent request; 2 - playing
