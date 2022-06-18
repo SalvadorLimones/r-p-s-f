@@ -1,7 +1,7 @@
 import React from "react";
 
-const GameRules = () => {
+const Rules = () => {
   return <div>Game rules</div>;
 };
 
-export default GameRules;
+export default Rules;

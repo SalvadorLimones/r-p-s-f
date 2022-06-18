@@ -124,6 +124,12 @@ router.post("/loggedin", auth({ block: true }), async (req, res) => {
   res.status(200).send("running...");
 });
 
+//get list of users
+router.get("/users", auth({ block: true }), async (req, res) => {
+  const users = await User.find().sort({ won: -1, played: 1 });
+  res.status(200).send(users);
+});
+
 //logout
 /* router.patch("/logout", async (req, res) => {
   const id = req.body.userId;

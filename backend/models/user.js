@@ -19,7 +19,9 @@ const userSchema = new mongoose.Schema({
     github: { type: String, unique: true, sparse: true },
   },
   online: { type: Boolean, default: false },
-  available: Boolean, //for champipnship games
+  available: { type: Boolean, default: false }, //for champipnship games
+  played: { type: Number, default: 0 },
+  won: { type: Number, default: 0 },
   friends: [friendSchema],
   playingStatus: Number, // 0 - he/she sent request; 1 - you've sent request; 2 - playing
   playingId: String, //id of other player

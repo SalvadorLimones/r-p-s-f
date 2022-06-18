@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import GameRules from "./pages/GameRules";
+import Rules from "./pages/Rules";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import Callback from "./pages/Callback";
@@ -17,7 +17,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/rules" element={<GameRules />}></Route>
+        <Route path="/rules" element={<Rules />}></Route>
         <Route
           path="/profile"
           element={

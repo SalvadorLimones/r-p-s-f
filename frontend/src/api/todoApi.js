@@ -11,7 +11,6 @@ export const todoApi = () => {
       const resp = await instance.post(path, data, {
         headers: { authorization: localStorage.getItem("token") },
       });
-      console.log("RESP?", resp);
       return resp;
     } catch (err) {
       return err.response;

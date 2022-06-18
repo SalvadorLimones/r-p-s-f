@@ -6,7 +6,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { auth, token, logout } = useAuth();
   const nav = (path) => {
-    console.log("routing");
     navigate(path);
   };
   return (
@@ -20,7 +19,7 @@ const Navbar = () => {
     >
       <div>
         <button onClick={() => nav("/")}>Home</button>
-        <button onClick={() => nav("/rules")}>Game Rules</button>
+        <button onClick={() => nav("/rules")}>Rules</button>
         {token && (
           <>
             <button onClick={() => navigate("/profile")}>Profile</button>
