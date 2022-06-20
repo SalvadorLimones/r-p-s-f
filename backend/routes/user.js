@@ -101,25 +101,27 @@ router.post("/create", auth({ block: true }), async (req, res) => {
 });
 
 //keep user logged in, log it out after 1 min, if no request received
+let oneMinuteTicker;
 router.post("/loggedin", auth({ block: true }), async (req, res) => {
   const user = await User.findById(res.locals.user.userId);
   if (!user) return res.status(400).send("User not found!");
 
-  const logout = () => {
-    user.online = false;
-    user.save((err) => {
-      if (err) return res.status(500).send(err);
-    });
-  };
-  const oneMinuteTicker = () => setTimeout(logout, 60000);
-
   user.online = true;
-  user.save((err) => {
+  await user.save((err) => {
     if (err) return res.status(500).send(err);
+    console.log("login");
   });
 
+  const logout = async () => {
+    user.online = false;
+    await user.save((err) => {
+      if (err) return res.status(500).send(err);
+      console.log("logout");
+    });
+  };
+
   clearTimeout(oneMinuteTicker);
-  oneMinuteTicker();
+  oneMinuteTicker = setTimeout(logout, 60000);
 
   res.status(200).send("running...");
 });
