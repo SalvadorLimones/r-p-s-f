@@ -6,6 +6,8 @@ exports.find = () => async (req, res, next) => {
 
   if (!(myId && otherId))
     return res.status(400).send("All inputs are required!");
+  if (myId === otherId)
+    return res.status(400).send("You are already your friend!");
 
   try {
     const me = await User.findById(myId);
