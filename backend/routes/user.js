@@ -132,6 +132,19 @@ router.get("/users", auth({ block: true }), async (req, res) => {
   res.status(200).send(users);
 });
 
+//get friends list
+router.get("/friends", auth({ block: true }), async (req, res) => {
+  const friends = await User.find({
+    $and: [
+      { "friends.friendId": res.locals.user.userId },
+      { "friends.friendStatus": 2 },
+    ],
+  });
+  console.log("USER", res.locals.user.userId);
+  console.log("Friends", friends);
+  res.status(200).send(friends);
+});
+
 //logout
 /* router.patch("/logout", async (req, res) => {
   const id = req.body.userId;
