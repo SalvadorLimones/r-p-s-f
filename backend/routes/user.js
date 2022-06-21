@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Game = require("../models/game");
 const http = require("../utils/http");
 const { auth } = require("../middlewares/auth");
 const config = require("../app.config");
@@ -140,8 +141,28 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
       { "friends.friendStatus": 2 },
     ],
   });
-  console.log("USER", res.locals.user.userId);
-  console.log("Friends", friends);
+  for (const friend of friends) {
+    const games = await Game.find({
+      $or: [
+        {
+          $and: [
+            { "playerOne.id": friend._id },
+            { "playerTwo.id": res.locals.user.userId },
+          ],
+        },
+        {
+          $and: [
+            { "playerOne.id": res.locals.user.userId },
+            { "playerTwo.id": friend._id },
+          ],
+        },
+      ],
+    });
+    const won = games.filter((game) => game.winner === res.locals.user.userId);
+    friend.played = games.length;
+    friend.won = won.length;
+  }
+
   res.status(200).send(friends);
 });
 

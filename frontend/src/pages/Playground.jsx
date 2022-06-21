@@ -33,7 +33,7 @@ const Playground = () => {
             <td>{user.username}</td>
             <td> {user.played}</td>
             <td> {user.won}</td>
-            <td> {user.won ? (user.won / user.played) * 100 : 0} </td>
+            <td> {user.played - user.won} </td>
             <td>
               <button onClick={() => invite(user._id)}>INVITE</button>
             </td>
