@@ -136,12 +136,14 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
           $and: [
             { "playerOne.id": friend._id },
             { "playerTwo.id": res.locals.user.userId },
+            { finished: { $not: { $eq: null } } },
           ],
         },
         {
           $and: [
             { "playerOne.id": res.locals.user.userId },
             { "playerTwo.id": friend._id },
+            { finished: { $not: { $eq: null } } },
           ],
         },
       ],
