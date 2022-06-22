@@ -8,17 +8,23 @@ const playerSchema = new mongoose.Schema({
 
 const roundSchema = new mongoose.Schema({
   roundNo: { type: Number, required: true },
+  started: { type: Date },
+  finished: { type: Date },
   playerOnePick: { type: Number, required: true },
   playerOneFuture: { type: Number, required: true },
   playerTwoPick: { type: Number, required: true },
   playerTwoFuture: { type: Number, required: true },
 });
 
+//startTime: { type: Date, required: true, default: Now },
+
 const gameSchema = new mongoose.Schema({
   playerOne: [playerSchema],
   playerTwo: [playerSchema],
   rounds: [roundSchema],
-  championship: Boolean, // there are two type of games, championship and friendly
+  championship: { type: Boolean }, // there are two type of games, championship and friendly
+  started: { type: Date },
+  finished: { type: Date },
   winner: { type: String, default: 0 },
 });
 

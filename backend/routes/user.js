@@ -102,27 +102,15 @@ router.post("/create", auth({ block: true }), async (req, res) => {
 });
 
 //keep user logged in, log it out after 1 min, if no request received
-let oneMinuteTicker;
 router.post("/loggedin", auth({ block: true }), async (req, res) => {
   const user = await User.findById(res.locals.user.userId);
   if (!user) return res.status(400).send("User not found!");
 
-  user.online = true;
+  user.lastTimeOnline = Date.now();
   await user.save((err) => {
     if (err) return res.status(500).send(err);
     console.log("login");
   });
-
-  const logout = async () => {
-    user.online = false;
-    await user.save((err) => {
-      if (err) return res.status(500).send(err);
-      console.log("logout");
-    });
-  };
-
-  clearTimeout(oneMinuteTicker);
-  oneMinuteTicker = setTimeout(logout, 60000);
 
   res.status(200).send("running...");
 });
@@ -161,8 +149,15 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
     const won = games.filter((game) => game.winner === res.locals.user.userId);
     friend.played = games.length;
     friend.won = won.length;
-  }
 
+    Date.now() - friend.lastTimeOnline < 15000
+      ? (friend.online = true)
+      : (friend.online = false);
+
+    Date.now() - friend.lastTimePlaying < 15000
+      ? (friend.playing = true)
+      : (friend.playing = false);
+  }
   res.status(200).send(friends);
 });
 

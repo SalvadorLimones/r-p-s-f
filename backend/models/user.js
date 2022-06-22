@@ -18,8 +18,10 @@ const userSchema = new mongoose.Schema({
     facebook: { type: String, unique: true, sparse: true },
     github: { type: String, unique: true, sparse: true },
   },
-  online: { type: Boolean, default: false },
-  available: { type: Boolean, default: false }, //for champipnship games
+  lastTimeOnline: { type: Date },
+  online: { type: Boolean },
+  lastTimePlaying: { type: Date },
+  playing: { type: Boolean },
   played: { type: Number, default: 0 },
   won: { type: Number, default: 0 },
   friends: [friendSchema],

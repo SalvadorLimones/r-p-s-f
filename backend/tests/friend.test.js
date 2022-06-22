@@ -386,17 +386,17 @@ describe("/api/user/friend test", () => {
     );
 
     client.set("authorization", sessionToken);
+
+    //when
     const response = await client.post("/api/friend/remove").send({
       userId: otherPlayer.id,
     });
 
-    //when
-    const meAgain = await User.findOne({ username: "Macska" });
-    const otherPlayerAgain = await User.findOne({ username: "Kutya" });
-
     //then
     expect(response.status).toBe(200);
     expect(response.text).toBe(" You are not friends anymore! :(");
+    const meAgain = await User.findOne({ username: "Macska" });
+    const otherPlayerAgain = await User.findOne({ username: "Kutya" });
     expect(meAgain.friends[0].friendUsername).toBe(otherPlayerAgain.username);
     expect(meAgain.friends[0].friendStatus).toBe(0);
     expect(otherPlayerAgain.friends[0].friendUsername).toBe(meAgain.username);

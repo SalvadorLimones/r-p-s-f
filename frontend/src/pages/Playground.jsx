@@ -16,7 +16,8 @@ const Playground = () => {
   };
 
   const invite = async (id) => {
-    console.log("INVITE");
+    const resp = await post("/game/start/friendly", { userId: id });
+    console.log(resp);
   };
 
   const accept = async (id) => {

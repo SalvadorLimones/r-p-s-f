@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { auth } = require("../middlewares/auth");
+const { find } = require("../middlewares/findUsersForFriendRout");
 const User = require("../models/user");
 const Game = require("../models/game");
 
@@ -51,5 +52,45 @@ router.post("/", auth({ block: true }), async (req, res) => {
   });
   res.status(200).send("Game successfully sored!");
 });
+
+//start a friendly game
+router.post(
+  "/start/friendly",
+  auth({ block: true }),
+  find(),
+  async (req, res) => {
+    const { me, otherPlayer, myFriend, iAmFriend } = res.locals;
+    if (!(myFriend?.friendStatus === 2 && iAmFriend?.friendStatus === 2))
+      return res
+        .status(400)
+        .send("You can play friendly games only with your friends!");
+
+    if (
+      !otherPlayer.lastTimeOnline ||
+      Date.now() - otherPlayer.lastTimeOnline > 15000
+    )
+      return res
+        .status(400)
+        .send("Sorry, the other player is not online right now!");
+
+    if (Date.now() - otherPlayer.lastTimePlaying < 15000)
+      return res.status(400).send("Sorry, the other player is busy right now!");
+    const game = await Game.create({
+      playerOne: [
+        {
+          id: me._id,
+          username: me.username,
+        },
+      ],
+      playerTwo: [
+        {
+          id: otherPlayer._id,
+          username: otherPlayer.username,
+        },
+      ],
+    });
+    return res.status(200).send(game.data);
+  }
+);
 
 module.exports = router;

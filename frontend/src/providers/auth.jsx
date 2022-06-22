@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("token", resp.data.sessionToken);
       setUser(jwt(resp.data.sessionToken));
       loggedin();
-      keepMeLoggedin = setInterval(loggedin, 50000);
+      keepMeLoggedin = setInterval(loggedin, 10000);
     } catch (err) {
       clearInterval(keepMeLoggedin);
       setToken(null);
@@ -74,7 +74,7 @@ const AuthProvider = ({ children }) => {
       setToken(tokenInStorage);
       setUser(jwt(tokenInStorage));
       loggedin();
-      keepMeLoggedin = setInterval(loggedin, 50000);
+      keepMeLoggedin = setInterval(loggedin, 10000);
     }
     // eslint-disable-next-line
   }, []);
