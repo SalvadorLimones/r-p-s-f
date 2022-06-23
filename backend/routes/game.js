@@ -53,6 +53,14 @@ router.post("/", auth({ block: true }), async (req, res) => {
   res.status(200).send("Game successfully sored!");
 });
 
+//return game data
+router.get("/:gameId", auth({ block: true }), async (req, res) => {
+  //const user = await User.findById(res.locals.userId);
+  const game = await Game.findById(req.params.gameId);
+  if (!game) return res.status(404).send("game not found!");
+  return res.status(200).send(game);
+});
+
 //start a friendly game
 router.post(
   "/start/friendly",
@@ -89,7 +97,14 @@ router.post(
         },
       ],
     });
-    return res.status(200).send(game.data);
+
+    const deleteIfNotStarted = async (id) => {
+      const gameAgain = await Game.findById(id);
+      if (!gameAgain.started) gameAgain.delete();
+    };
+
+    setTimeout(() => deleteIfNotStarted(game._id), 40000);
+    return res.status(200).send(game);
   }
 );
 

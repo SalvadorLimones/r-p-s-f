@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { todoApi } from "../api/todoApi";
 import { useAuth } from "../providers/auth";
+import { useNavigate } from "react-router-dom";
 
 const Playground = () => {
   const { get, post } = todoApi();
   const [users, setUsers] = useState([]);
   const { user: me } = useAuth();
+  const navigate = useNavigate();
 
   const getFriends = async () => {
     const resp = await get("/user/friends");
@@ -18,6 +20,7 @@ const Playground = () => {
   const invite = async (id) => {
     const resp = await post("/game/start/friendly", { userId: id });
     console.log(resp);
+    if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
   };
 
   const accept = async (id) => {

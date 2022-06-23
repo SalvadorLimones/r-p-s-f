@@ -4,12 +4,13 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Rules from "./pages/Rules";
 import Profile from "./pages/Profile";
-import Navbar from "./components/Navbar";
 import Callback from "./pages/Callback";
-import Protected from "./components/Protected";
 import Register from "./pages/Register";
 import Championship from "./pages/Championship";
 import Friends from "./pages/Friends";
+import Game from "./pages/Game";
+import Navbar from "./components/Navbar";
+import Protected from "./components/Protected";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <Protected key={"4"}>
               <Friends />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          path="/game"
+          element={
+            <Protected key={"5"}>
+              <Game />
             </Protected>
           }
         ></Route>
