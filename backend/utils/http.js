@@ -23,8 +23,16 @@ const http = () => {
       return err.response;
     }
   };
+  const del = async (...params) => {
+    try {
+      const response = await instance.delete(...params);
+      return response;
+    } catch (err) {
+      return err.response;
+    }
+  };
 
-  return { post, get, _instance: instance };
+  return { post, get, del, _instance: instance };
 };
 
 module.exports = http();

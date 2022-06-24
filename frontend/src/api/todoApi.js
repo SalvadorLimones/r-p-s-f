@@ -28,5 +28,16 @@ export const todoApi = () => {
     }
   };
 
-  return { post, get, _instance: instance };
+  const del = async (path) => {
+    try {
+      const resp = await instance.delete(path, {
+        headers: { authorization: localStorage.getItem("token") },
+      });
+      return resp;
+    } catch (err) {
+      return err.response;
+    }
+  };
+
+  return { post, get, del, _instance: instance };
 };

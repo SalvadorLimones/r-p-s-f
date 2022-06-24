@@ -61,6 +61,23 @@ router.get("/:gameId", auth({ block: true }), async (req, res) => {
   return res.status(200).send(game);
 });
 
+//delete a game
+router.delete("/:gameId", auth({ block: true }), async (req, res) => {
+  //const user = await User.findById(res.locals.userId);
+  const game = await Game.findById(req.params.gameId);
+  if (!game) return res.status(404).send("Game not found!");
+  if (game.playerOne._id !== res.locals.userId)
+    return res.status(401).send("You are not authorized to delete this game!");
+  if (game.started)
+    return res
+      .status(401)
+      .send("You can't delete a game which has already started!");
+  game.delete((err) => {
+    if (err) return res.status(500).send(err);
+    res.status(200).send("Game deleted!");
+  });
+});
+
 //start a friendly game
 router.post(
   "/start/friendly",
@@ -100,7 +117,8 @@ router.post(
 
     const deleteIfNotStarted = async (id) => {
       const gameAgain = await Game.findById(id);
-      if (!gameAgain.started) gameAgain.delete();
+      console.log("GAMEAGAIN:", gameAgain);
+      if (gameAgain && !gameAgain.started) gameAgain.delete();
     };
 
     setTimeout(() => deleteIfNotStarted(game._id), 40000);

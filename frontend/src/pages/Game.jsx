@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 let getGameData;
 const Game = () => {
-  const { get, post } = todoApi();
+  const { get, post, del } = todoApi();
   const { user: me } = useAuth();
   const [started, setStarted] = useState(false);
+  const [id, setId] = useState("");
   const navigate = useNavigate();
 
-  const fetch = async (id) => {
-    const resp = await get("/game/" + id);
+  const fetch = async (gameId) => {
+    const resp = await get("/game/" + gameId);
     console.log("GAMEDATA: ", resp.data);
     if (resp.data.started) setStarted(true);
     if (resp.status !== 200) {
@@ -20,11 +21,17 @@ const Game = () => {
     }
   };
 
+  const cancel = async (gameId) => {
+    const resp = await del("/game/" + gameId);
+    console.log(resp);
+  };
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-    fetch(id);
-    getGameData = setInterval(() => fetch(id), 5000);
+    const gameId = params.get("id");
+    setId(gameId);
+    fetch(gameId);
+    getGameData = setInterval(() => fetch(gameId), 5000);
     // eslint-disable-next-line
   }, []);
   return (
@@ -32,7 +39,7 @@ const Game = () => {
       {!started ? (
         <div>
           <h2>Waiting for other player to join..</h2>
-          <button>Cancel</button>
+          <button onClick={() => cancel(id)}>Cancel</button>
         </div>
       ) : (
         <div>Game on!</div>
