@@ -151,6 +151,16 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
         },
       ],
     });
+
+    const invited = await Game.find({
+      $and: [
+        { "playerOne.id": friend._id },
+        { "playerTwo.id": res.locals.user.userId },
+        { started: null },
+      ],
+    });
+    console.log("INVITED:", invited);
+    if (invited.length > 0) friend.invited = true;
     const won = games.filter((game) => game.winner === res.locals.user.userId);
     friend.played = games.length;
     friend.won = won.length;

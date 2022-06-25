@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
   played: { type: Number, default: 0 },
   won: { type: Number, default: 0 },
   friends: [friendSchema],
+  invited: { type: Boolean },
   playingStatus: Number, // 0 - he/she sent request; 1 - you've sent request; 2 - playing
   playingId: String, //id of other player
   badges: [badgeSchema],

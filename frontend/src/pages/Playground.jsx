@@ -42,7 +42,9 @@ const Playground = () => {
               <button onClick={() => invite(user._id)}>INVITE</button>
             </td>
             <td>
-              <button onClick={() => accept(user._id)}>ACCEPT</button>
+              <button disabled={!user.invited} onClick={() => accept(user._id)}>
+                ACCEPT
+              </button>
             </td>
           </tr>
         )}
