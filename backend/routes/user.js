@@ -123,10 +123,15 @@ router.get("/users", auth({ block: true }), async (req, res) => {
 
 //get friends list
 router.get("/friends", auth({ block: true }), async (req, res) => {
-  const searchCriteria = "friends[" + res.locals.user.userId + "].friendStatus";
-  console.log("SEARCH:", searchCriteria);
-  const friends = await User.find({ [searchCriteria]: 2 });
-  console.log("FRIENDS:", friends);
+  const friends = await User.find({
+    friends: {
+      $elemMatch: {
+        friendId: res.locals.user.userId,
+        friendStatus: 2,
+      },
+    },
+  });
+
   for (const friend of friends) {
     const games = await Game.find({
       $or: [
