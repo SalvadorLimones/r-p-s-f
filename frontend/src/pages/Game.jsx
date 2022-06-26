@@ -22,6 +22,7 @@ const Game = () => {
   };
 
   const cancel = async (gameId) => {
+    console.log("GAMEIDTODELETE:", gameId);
     const resp = await del("/game/" + gameId);
     fetch();
   };
