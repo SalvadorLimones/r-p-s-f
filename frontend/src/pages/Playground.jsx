@@ -3,6 +3,7 @@ import { todoApi } from "../api/todoApi";
 import { useAuth } from "../providers/auth";
 import { useNavigate } from "react-router-dom";
 
+let getFriendsList;
 const Playground = () => {
   const { get, post } = todoApi();
   const [users, setUsers] = useState([]);
@@ -24,7 +25,9 @@ const Playground = () => {
   };
 
   const accept = async (id) => {
-    console.log("ACCEPT");
+    const resp = await post("/game/join", { gameId: id });
+    if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
+    console.log("JOINED GAME: ", resp);
   };
 
   const usersData = (user, i) => {
@@ -39,10 +42,15 @@ const Playground = () => {
             <td> {user.won}</td>
             <td> {user.played - user.won} </td>
             <td>
-              <button onClick={() => invite(user._id)}>INVITE</button>
+              <button disabled={user.invited} onClick={() => invite(user._id)}>
+                INVITE
+              </button>
             </td>
             <td>
-              <button disabled={!user.invited} onClick={() => accept(user._id)}>
+              <button
+                disabled={!user.invited}
+                onClick={() => accept(user.invited)}
+              >
                 ACCEPT
               </button>
             </td>
@@ -54,6 +62,11 @@ const Playground = () => {
 
   useEffect(() => {
     getFriends();
+    getFriendsList = setInterval(getFriends, 5000);
+    return () => {
+      clearInterval(getFriendsList);
+    };
+
     // eslint-disable-next-line
   }, []);
 
@@ -73,7 +86,19 @@ const Playground = () => {
             <th>Accept, start game</th>
           </tr>
         </thead>
-        <tbody>{users && users.map((user, i) => usersData(user, i))}</tbody>
+        <tbody>
+          {users && (
+            <>
+              {users
+                .filter((user) => user.invited)
+                .map((user, i) => usersData(user, i))}
+
+              {users
+                .filter((user) => !user.invited)
+                .map((user, i) => usersData(user, i))}
+            </>
+          )}
+        </tbody>
       </table>
     </div>
   );

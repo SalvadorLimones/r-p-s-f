@@ -117,7 +117,6 @@ router.post(
 
     const deleteIfNotStarted = async (id) => {
       const gameAgain = await Game.findById(id);
-      console.log("GAMEAGAIN:", gameAgain);
       if (gameAgain && !gameAgain.started) gameAgain.delete();
     };
 
@@ -125,5 +124,27 @@ router.post(
     return res.status(200).send(game);
   }
 );
+
+//join a game
+router.post("/join", auth({ block: true }), async (req, res) => {
+  const id = req.body.gameId;
+  if (!id) console.log("ide kerül majd a championship game");
+  const game = await Game.findById(id);
+
+  if (game.playerTwo[0].id !== res.locals.user.userId)
+    return res
+      .status(401)
+      .send("Sorry, you were not invited to join this game!");
+  if (game.started)
+    return res.status(400).send("This game has already started!");
+  if (game.finished)
+    return res.status(400).send("This game has already ended!");
+
+  game.started = Date.now();
+  game.save((err) => {
+    if (err) return res.status(500).send(err);
+    res.status(200).send(game);
+  });
+});
 
 module.exports = router;

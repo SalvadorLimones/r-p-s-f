@@ -23,7 +23,7 @@ const Game = () => {
 
   const cancel = async (gameId) => {
     const resp = await del("/game/" + gameId);
-    console.log(resp);
+    fetch();
   };
 
   useEffect(() => {
@@ -32,8 +32,12 @@ const Game = () => {
     setId(gameId);
     fetch(gameId);
     getGameData = setInterval(() => fetch(gameId), 5000);
+    return () => {
+      clearInterval(getGameData);
+    };
     // eslint-disable-next-line
   }, []);
+
   return (
     <div>
       {!started ? (
