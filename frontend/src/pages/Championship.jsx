@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { todoApi } from "../api/todoApi";
+import { useNavigate } from "react-router-dom";
 
 const Championship = () => {
-  const { get } = todoApi();
+  const { get, post } = todoApi();
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+
+  const joinOrCreate = async () => {
+    let resp;
+    resp = await post("/game/join");
+    if (resp.status === 404) resp = await post("game/start/championship");
+    if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
+    console.log("JOINED GAME: ", resp);
+  };
 
   const getUsers = async () => {
     const resp = await get("/user/users");
@@ -32,7 +42,7 @@ const Championship = () => {
 
   return (
     <div>
-      <button>Ready to Play!</button>
+      <button onClick={() => joinOrCreate()}>Ready to Play!</button>
       <h3>Leaderboard</h3>
       <table>
         <thead>

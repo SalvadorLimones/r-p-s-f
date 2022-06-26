@@ -74,6 +74,7 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   const sessionToken = jwt.sign(
     {
       userId: user?._id,
+      username: user?.username,
       providers: user ? user.providers : { [provider]: openId },
     },
     process.env.JWT_SECRET,
@@ -109,7 +110,6 @@ router.post("/loggedin", auth({ block: true }), async (req, res) => {
   user.lastTimeOnline = Date.now();
   await user.save((err) => {
     if (err) return res.status(500).send(err);
-    console.log("login");
   });
 
   res.status(200).send("running...");
@@ -159,7 +159,6 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
         { started: null },
       ],
     });
-    console.log("INVITED:", invited);
     if (invited) friend.invited = invited._id;
     const won = games.filter((game) => game.winner === res.locals.user.userId);
     friend.played = games.length;

@@ -101,18 +101,14 @@ router.post(
     if (Date.now() - otherPlayer.lastTimePlaying < 15000)
       return res.status(400).send("Sorry, the other player is busy right now!");
     const game = await Game.create({
-      playerOne: [
-        {
-          id: me._id,
-          username: me.username,
-        },
-      ],
-      playerTwo: [
-        {
-          id: otherPlayer._id,
-          username: otherPlayer.username,
-        },
-      ],
+      playerOne: {
+        id: me._id,
+        username: me.username,
+      },
+      playerTwo: {
+        id: otherPlayer._id,
+        username: otherPlayer.username,
+      },
     });
 
     const deleteIfNotStarted = async (id) => {
@@ -125,13 +121,49 @@ router.post(
   }
 );
 
+//create a championship game game
+router.post("/start/championship", auth({ block: true }), async (req, res) => {
+  console.log("USER:", res.locals.user);
+  const game = await Game.create({
+    playerOne: {
+      id: res.locals.user.userId,
+      username: res.locals.user.username,
+    },
+    championship: true,
+    created: Date.now(),
+  });
+
+  const deleteIfNotStarted = async (id) => {
+    const gameAgain = await Game.findById(id);
+    if (gameAgain && !gameAgain.started) gameAgain.delete();
+  };
+
+  setTimeout(() => deleteIfNotStarted(game._id), 40000);
+  return res.status(200).send(game);
+});
+
 //join a game
 router.post("/join", auth({ block: true }), async (req, res) => {
   const id = req.body.gameId;
-  if (!id) console.log("ide kerül majd a championship game");
-  const game = await Game.findById(id);
+  let game;
+  if (!id) {
+    game = await Game.findOne(
+      {
+        $and: [{ "playerTwo.id": null }, { championship: true }],
+      },
+      { sort: { created: 1 } }
+    );
+    if (!game) return res.status(404).send("Please create a game!");
+    game.playerTwo = {
+      id: res.locals.user.userId,
+      username: res.locals.user.username,
+    };
+    game.championship = true;
+  } else {
+    game = await Game.findById(id);
+  }
 
-  if (game.playerTwo[0].id !== res.locals.user.userId)
+  if (game.playerTwo.id !== res.locals.user.userId)
     return res
       .status(401)
       .send("Sorry, you were not invited to join this game!");
