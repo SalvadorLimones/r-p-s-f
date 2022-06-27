@@ -154,6 +154,7 @@ router.post(
 
 //join a game
 router.post("/join", auth({ block: true }), playing(), async (req, res) => {
+  console.log("USER: ", res.locals.user);
   const id = req.body.gameId;
   let game;
   if (!id) {
@@ -184,6 +185,61 @@ router.post("/join", auth({ block: true }), playing(), async (req, res) => {
 
   game.started = Date.now();
   game.save((err) => {
+    if (err) return res.status(500).send(err);
+    res.status(200).send(game);
+  });
+});
+
+//store player picks
+router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
+  let me;
+  const { round, Pick, Future } = req.body;
+  console.log("ROUND: ", round, "PICK: ", Pick, "FUTURE: ", Future);
+  if (!(round && Pick && Future))
+    return res.status(400).send("All inputs required!");
+  const game = await Game.findById(req.params.gameId);
+
+  if (!game) return res.status(404).send("game not found!");
+
+  if (
+    game.playerOne?.id !== res.locals.user.userId &&
+    game.playerTwo?.id !== res.locals.user.userId
+  )
+    return res.status(401).send("Sorry, this is not your game!");
+
+  if (!game.started)
+    return res.status(400).send("This game hasn't started yet!");
+
+  if (game.finished)
+    return res.status(400).send("This game has already ended!");
+
+  if (game.playerOne.id === res.locals.user.userId) {
+    me = "playerOne";
+  } else {
+    me = "playerTwo";
+  }
+
+  if (!game.rounds[round - 1]) {
+    game.rounds.push({
+      roundNo: round,
+      started: Date.now(),
+      [me + "Pick"]: Pick,
+      [me + "Future"]: Future,
+    });
+  } else {
+    if (
+      game.rounds[round - 1][me + "Pick"] ||
+      game.rounds[round - 1][me + "Future"]
+    )
+      return res
+        .status(400)
+        .send("You have already sent your pick in this round!");
+    game.rounds[round - 1][me + "Pick"] = Pick;
+    game.rounds[round - 1][me + "Future"] = Future;
+    game.rounds[round - 1].finished = Date.now();
+    game.round = round + 1;
+  }
+  await game.save((err) => {
     if (err) return res.status(500).send(err);
     res.status(200).send(game);
   });

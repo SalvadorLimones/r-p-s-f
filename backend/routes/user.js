@@ -94,6 +94,7 @@ router.post("/create", auth({ block: true }), async (req, res) => {
   const sessionToken = jwt.sign(
     {
       userId: user._id,
+      username: user.username,
       providers: user.providers,
     },
     process.env.JWT_SECRET,
