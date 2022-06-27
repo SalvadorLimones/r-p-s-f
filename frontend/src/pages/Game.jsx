@@ -81,7 +81,9 @@ const Game = () => {
                 <h3>{gameStats.playerTwo.score}</h3>
               </div>
             </div>
+
             <div>
+              <p>Avoid: </p>
               <p>Choice:</p>
               <input type="radio" name="pick" onClick={() => setPick("rock")} />
               Rock

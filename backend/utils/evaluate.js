@@ -20,6 +20,20 @@ const evaluate = (thisRound, prevRound) => {
       playerTwo = playerTwo + 1;
       break;
   }
+
+  if (prevRound) {
+    if (
+      thisRound.playerTwoPick !== "none" &&
+      thisRound.playerTwoPick === prevRound.playerOnePick
+    )
+      playerOne = playerOne + 0.5;
+    if (
+      thisRound.playerOnePick !== "none" &&
+      thisRound.playerOnePick === prevRound.playerTwoPick
+    )
+      playerTwo = playerTwo + 0.5;
+  }
+
   return { playerOne, playerTwo };
 };
 
