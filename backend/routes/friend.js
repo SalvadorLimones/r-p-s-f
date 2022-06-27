@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { auth } = require("../middlewares/auth");
-const { find } = require("../middlewares/findUsersForFriendRout");
+const { find } = require("../middlewares/findUsers");
 
 //friend
 router.post("/add", auth({ block: true }), find(), async (req, res) => {

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { auth } = require("../middlewares/auth");
-const { find } = require("../middlewares/findUsersForFriendRout");
+const { find } = require("../middlewares/findUsers");
+const { playing } = require("../middlewares/playing");
 const User = require("../models/user");
 const Game = require("../models/game");
 
@@ -64,18 +65,16 @@ router.get("/:gameId", auth({ block: true }), async (req, res) => {
 //delete a game
 router.delete("/:gameId", auth({ block: true }), async (req, res) => {
   //const user = await User.findById(res.locals.userId);
-  console.log("DELETE1");
   const game = await Game.findById(req.params.gameId);
-  console.log("DELETE2");
+
   if (!game) return res.status(404).send("Game not found!");
   if (game.playerOne.id !== res.locals.user.userId)
     return res.status(401).send("You are not authorized to delete this game!");
-  console.log("DELETE3");
   if (game.started)
     return res
       .status(401)
       .send("You can't delete a game which has already started!");
-  console.log("DELETE4");
+
   game.delete((err) => {
     if (err) return res.status(500).send(err);
     res.status(200).send("Game deleted!");
@@ -87,8 +86,10 @@ router.post(
   "/start/friendly",
   auth({ block: true }),
   find(),
+  playing(),
   async (req, res) => {
     const { me, otherPlayer, myFriend, iAmFriend } = res.locals;
+
     if (!(myFriend?.friendStatus === 2 && iAmFriend?.friendStatus === 2))
       return res
         .status(400)
@@ -126,28 +127,33 @@ router.post(
 );
 
 //create a championship game game
-router.post("/start/championship", auth({ block: true }), async (req, res) => {
-  console.log("USER:", res.locals.user);
-  const game = await Game.create({
-    playerOne: {
-      id: res.locals.user.userId,
-      username: res.locals.user.username,
-    },
-    championship: true,
-    created: Date.now(),
-  });
+router.post(
+  "/start/championship",
+  auth({ block: true }),
+  playing(),
+  async (req, res) => {
+    console.log("USER:", res.locals.user);
+    const game = await Game.create({
+      playerOne: {
+        id: res.locals.user.userId,
+        username: res.locals.user.username,
+      },
+      championship: true,
+      created: Date.now(),
+    });
 
-  const deleteIfNotStarted = async (id) => {
-    const gameAgain = await Game.findById(id);
-    if (gameAgain && !gameAgain.started) gameAgain.delete();
-  };
+    const deleteIfNotStarted = async (id) => {
+      const gameAgain = await Game.findById(id);
+      if (gameAgain && !gameAgain.started) gameAgain.delete();
+    };
 
-  setTimeout(() => deleteIfNotStarted(game._id), 40000);
-  return res.status(200).send(game);
-});
+    setTimeout(() => deleteIfNotStarted(game._id), 40000);
+    return res.status(200).send(game);
+  }
+);
 
 //join a game
-router.post("/join", auth({ block: true }), async (req, res) => {
+router.post("/join", auth({ block: true }), playing(), async (req, res) => {
   const id = req.body.gameId;
   let game;
   if (!id) {
