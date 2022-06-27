@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { auth } = require("../middlewares/auth");
 const { find } = require("../middlewares/findUsers");
 const { playing } = require("../middlewares/playing");
+const evaluate = require("../utils/evaluate");
 const User = require("../models/user");
 const Game = require("../models/game");
 
@@ -237,6 +238,17 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
     game.rounds[round - 1][me + "Pick"] = Pick;
     game.rounds[round - 1][me + "Future"] = Future;
     game.rounds[round - 1].finished = Date.now();
+    const toAdd = evaluate(game.rounds[round - 1], game.rounds[round - 2]);
+    game.playerOne.score += toAdd.playerOne;
+    game.playerTwo.score += toAdd.playerTwo;
+    if (game.playerOne.score >= 5) {
+      game.finished = Date.now();
+      game.winner = game.playerOne.id;
+    }
+    if (game.playerTwo.score >= 5) {
+      game.finished = Date.now();
+      game.winner = game.playerTwo.id;
+    }
     game.round = round + 1;
   }
   await game.save((err) => {

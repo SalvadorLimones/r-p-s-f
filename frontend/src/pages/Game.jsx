@@ -8,6 +8,7 @@ const Game = () => {
   const { get, post, del } = todoApi();
   const { user: me } = useAuth();
   const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
   const [id, setId] = useState("");
   const [gameStats, setGameStats] = useState({});
   const [pick, setPick] = useState("");
@@ -22,6 +23,10 @@ const Game = () => {
       navigate("/friends");
     }
     if (resp.data.started) setStarted(true);
+    if (resp.data.finished) {
+      setFinished(true);
+      clearInterval(getGameData);
+    }
     setGameStats(resp.data);
   };
 
@@ -64,6 +69,7 @@ const Game = () => {
       ) : (
         gameStats && (
           <div>
+            {finished && <h2>DONE!</h2>}
             <div>Round {gameStats.round}</div>
             <div>
               <div>
