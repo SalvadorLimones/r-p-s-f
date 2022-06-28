@@ -89,6 +89,18 @@ const Game = () => {
                 <h2>{gameStats[me].username}</h2>
                 <h3>{gameStats[me].score}</h3>
               </div>
+              {gameStats.round > 1 && (
+                <div>
+                  <p>
+                    My pick:{" "}
+                    {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
+                  </p>
+                  <p>
+                    Opponents pick:{" "}
+                    {gameStats.rounds[gameStats.round - 2][opponent + "Pick"]}
+                  </p>
+                </div>
+              )}
               <div>
                 <h2>{gameStats[opponent].username}</h2>
                 <h3>{gameStats[opponent].score}</h3>
