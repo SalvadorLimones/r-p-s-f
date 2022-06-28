@@ -2,7 +2,8 @@ const router = require("express").Router();
 const { auth } = require("../middlewares/auth");
 const { find } = require("../middlewares/findUsers");
 const { playing } = require("../middlewares/playing");
-const evaluate = require("../utils/evaluate");
+const evaluateRound = require("../utils/evaluateRound");
+const evaluateGame = require("../utils/evaluateGame");
 const User = require("../models/user");
 const Game = require("../models/game");
 
@@ -238,16 +239,24 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
     game.rounds[round - 1][me + "Pick"] = Pick;
     game.rounds[round - 1][me + "Future"] = Future;
     game.rounds[round - 1].finished = Date.now();
-    const toAdd = evaluate(game.rounds[round - 1], game.rounds[round - 2]);
+    const toAdd = evaluateRound(game.rounds[round - 1], game.rounds[round - 2]);
     game.playerOne.score += toAdd.playerOne;
     game.playerTwo.score += toAdd.playerTwo;
-    if (game.playerOne.score >= 5) {
+    if (
+      game.playerOne.score >= 5 &&
+      game.playerOne.score - game.playerTwo.score >= 1
+    ) {
       game.finished = Date.now();
       game.winner = game.playerOne.id;
+      if (game.championship) evaluateGame(game.playerOne.id, game.playerTwo.id);
     }
-    if (game.playerTwo.score >= 5) {
+    if (
+      game.playerTwo.score >= 5 &&
+      game.playerTwo.score - game.playerOne.score >= 1
+    ) {
       game.finished = Date.now();
       game.winner = game.playerTwo.id;
+      if (game.championship) evaluateGame(game.playerTwo.id, game.playerOne.id);
     }
     game.round = round + 1;
   }

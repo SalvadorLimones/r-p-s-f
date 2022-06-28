@@ -1,4 +1,4 @@
-const evaluate = (thisRound, prevRound) => {
+const evaluateRound = (thisRound, prevRound) => {
   let playerOne = 0;
   let playerTwo = 0;
 
@@ -37,4 +37,4 @@ const evaluate = (thisRound, prevRound) => {
   return { playerOne, playerTwo };
 };
 
-module.exports = evaluate;
+module.exports = evaluateRound;

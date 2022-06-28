@@ -113,7 +113,7 @@ router.post("/loggedin", auth({ block: true }), async (req, res) => {
     if (err) return res.status(500).send(err);
   });
 
-  res.status(200).send("running...");
+  res.status(200).send("online...");
 });
 
 //get list of users
@@ -141,6 +141,7 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
             { "playerOne.id": friend._id },
             { "playerTwo.id": res.locals.user.userId },
             { finished: { $not: { $eq: null } } },
+            { championship: { $not: { $eq: true } } },
           ],
         },
         {
@@ -148,6 +149,7 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
             { "playerOne.id": res.locals.user.userId },
             { "playerTwo.id": friend._id },
             { finished: { $not: { $eq: null } } },
+            { championship: { $not: { $eq: true } } },
           ],
         },
       ],
