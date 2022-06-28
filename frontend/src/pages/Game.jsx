@@ -6,14 +6,26 @@ import { useNavigate } from "react-router-dom";
 let getGameData;
 const Game = () => {
   const { get, post, del } = todoApi();
-  const { user: me } = useAuth();
+  const { user } = useAuth();
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [me, setMe] = useState("");
+  const [opponent, setOpponent] = useState("");
   const [id, setId] = useState("");
   const [gameStats, setGameStats] = useState({});
   const [pick, setPick] = useState("");
   const [future, setFuture] = useState("");
   const navigate = useNavigate();
+
+  const assignRoles = (playerOne) => {
+    if (user.userId === playerOne.id) {
+      setMe("playerOne");
+      setOpponent("playerTwo");
+    } else {
+      setMe("playerTwo");
+      setOpponent("playerOne");
+    }
+  };
 
   const fetch = async (gameId) => {
     const resp = await get("/game/" + gameId);
@@ -23,6 +35,7 @@ const Game = () => {
       navigate("/friends");
     }
     if (resp.data.started) setStarted(true);
+    if (resp.data.round === 1) assignRoles(resp.data.playerOne);
     if (resp.data.finished) {
       setFinished(true);
       clearInterval(getGameData);
@@ -73,17 +86,22 @@ const Game = () => {
             <div>Round {gameStats.round}</div>
             <div>
               <div>
-                <h2>{gameStats.playerOne.username}</h2>
-                <h3>{gameStats.playerOne.score}</h3>
+                <h2>{gameStats[me].username}</h2>
+                <h3>{gameStats[me].score}</h3>
               </div>
               <div>
-                <h2>{gameStats.playerTwo.username}</h2>
-                <h3>{gameStats.playerTwo.score}</h3>
+                <h2>{gameStats[opponent].username}</h2>
+                <h3>{gameStats[opponent].score}</h3>
               </div>
             </div>
 
             <div>
-              <p>Avoid: </p>
+              {gameStats.round > 1 && (
+                <p>
+                  Avoid:{" "}
+                  {gameStats.rounds[gameStats.round - 2][opponent + "Future"]}
+                </p>
+              )}
               <p>Choice:</p>
               <input type="radio" name="pick" onClick={() => setPick("rock")} />
               Rock
