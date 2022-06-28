@@ -24,12 +24,12 @@ const evaluateRound = (thisRound, prevRound) => {
   if (prevRound) {
     if (
       thisRound.playerTwoPick !== "none" &&
-      thisRound.playerTwoPick === prevRound.playerOnePick
+      thisRound.playerTwoPick === prevRound.playerOneFuture
     )
       playerOne = playerOne + 0.5;
     if (
       thisRound.playerOnePick !== "none" &&
-      thisRound.playerOnePick === prevRound.playerTwoPick
+      thisRound.playerOnePick === prevRound.playerTwoFuture
     )
       playerTwo = playerTwo + 0.5;
   }
