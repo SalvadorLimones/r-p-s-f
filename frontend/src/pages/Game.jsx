@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { todoApi } from "../api/todoApi";
 import { useAuth } from "../providers/auth";
 import { useNavigate } from "react-router-dom";
+import Timer from "../components/Timer";
 
 let getGameData;
 const Game = () => {
@@ -9,12 +10,14 @@ const Game = () => {
   const { user } = useAuth();
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [choiceSent, setChoiceSent] = useState(false);
+  const [round, setRound] = useState(0);
   const [me, setMe] = useState("");
   const [opponent, setOpponent] = useState("");
   const [id, setId] = useState("");
   const [gameStats, setGameStats] = useState({});
-  const [pick, setPick] = useState("");
-  const [future, setFuture] = useState("");
+  const [pick, setPick] = useState("none");
+  const [future, setFuture] = useState("none");
   const navigate = useNavigate();
 
   const assignRoles = (playerOne) => {
@@ -27,6 +30,14 @@ const Game = () => {
     }
   };
 
+  const timeExpired = (left) => {
+    console.log("LEFT: ", left);
+    if (left === 0) sendChoice(id, "none", "none");
+    setPick("none");
+    setFuture("none");
+    setChoiceSent(true);
+  };
+
   const fetch = async (gameId) => {
     const resp = await get("/game/" + gameId);
     console.log("GAMEDATA: ", resp.data);
@@ -36,6 +47,7 @@ const Game = () => {
     }
     if (resp.data.started) setStarted(true);
     if (resp.data.round === 1) assignRoles(resp.data.playerOne);
+    if (resp.data.round !== round) setRound(resp.data.round);
     if (resp.data.finished) {
       setFinished(true);
       clearInterval(getGameData);
@@ -56,9 +68,17 @@ const Game = () => {
       Pick: pick,
       Future: future,
     });
-    setPick("");
-    setFuture("");
+    setPick("none");
+    setFuture("none");
+    setChoiceSent(true);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setChoiceSent(false);
+    }, 1000);
+    // eslint-disable-next-line
+  }, [round]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -89,18 +109,23 @@ const Game = () => {
                 <h2>{gameStats[me].username}</h2>
                 <h3>{gameStats[me].score}</h3>
               </div>
-              {gameStats.round > 1 && (
-                <div>
-                  <p>
-                    My pick:{" "}
-                    {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
-                  </p>
-                  <p>
-                    Opponents pick:{" "}
-                    {gameStats.rounds[gameStats.round - 2][opponent + "Pick"]}
-                  </p>
-                </div>
+              {choiceSent ? (
+                gameStats.round > 1 && (
+                  <div>
+                    <p>
+                      My pick:{" "}
+                      {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
+                    </p>
+                    <p>
+                      Opponents pick:{" "}
+                      {gameStats.rounds[gameStats.round - 2][opponent + "Pick"]}
+                    </p>
+                  </div>
+                )
+              ) : (
+                <Timer onChange={(e) => timeExpired(e.target.value)} />
               )}
+
               <div>
                 <h2>{gameStats[opponent].username}</h2>
                 <h3>{gameStats[opponent].score}</h3>
@@ -152,7 +177,7 @@ const Game = () => {
               Scissors
             </div>
             <button
-              disabled={!(pick && future)}
+              disabled={pick === "none" || future === "none"}
               onClick={() => sendChoice(id, pick, future)}
             >
               Submit
