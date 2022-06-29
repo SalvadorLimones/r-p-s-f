@@ -16,6 +16,7 @@ exports.playing = () => async (req, res, next) => {
       },
     ],
   });
+  console.log("PLAYING:", alreadyPlaying);
   if (alreadyPlaying)
     return res
       .status(401)

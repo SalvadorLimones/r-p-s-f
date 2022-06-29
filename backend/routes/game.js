@@ -221,7 +221,10 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
     me = "playerTwo";
   }
 
-  if (!game.rounds[round - 1]) {
+  if (
+    !game.rounds[round - 1] &&
+    (game.rounds[round - 2]?.finished || !game.rounds[round - 2])
+  ) {
     game.rounds.push({
       roundNo: round,
       started: Date.now(),
@@ -258,6 +261,7 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
       game.winner = game.playerTwo.id;
       if (game.championship) evaluateGame(game.playerTwo.id, game.playerOne.id);
     }
+
     game.round = round + 1;
   }
   await game.save((err) => {

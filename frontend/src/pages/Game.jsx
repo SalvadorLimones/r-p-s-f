@@ -10,7 +10,7 @@ const Game = () => {
   const { user } = useAuth();
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [showTimer, setShowTimer] = useState(true);
+  const [showTimer, setShowTimer] = useState(false);
   const [showPicks, setShowPicks] = useState(false);
   const [round, setRound] = useState(0);
   const [me, setMe] = useState("");
@@ -39,8 +39,12 @@ const Game = () => {
       navigate("/friends");
     }
     if (resp.data.started) setStarted(true);
-    if (resp.data.round === 1) assignRoles(resp.data.playerOne);
+    if (resp.data.round === 1) {
+      assignRoles(resp.data.playerOne);
+      setShowTimer(true);
+    }
     if (resp.data.round !== round) setRound(resp.data.round);
+
     if (resp.data.finished) {
       setFinished(true);
       clearInterval(getGameData);
@@ -62,11 +66,12 @@ const Game = () => {
     });
     setPick("none");
     setFuture("none");
-    setShowTimer(false);
+    //setShowTimer(false);
   };
 
   useEffect(() => {
     setShowPicks(true);
+    setShowTimer(false);
     setTimeout(() => {
       setShowPicks(false);
       setShowTimer(true);
@@ -80,7 +85,7 @@ const Game = () => {
     const gameId = params.get("id");
     setId(gameId);
     fetch(gameId);
-    getGameData = setInterval(() => fetch(gameId), 5000);
+    getGameData = setInterval(() => fetch(gameId), 3000);
     return () => {
       clearInterval(getGameData);
     };
@@ -117,7 +122,9 @@ const Game = () => {
                 </div>
               )}
 
-              {showTimer && <Timer />}
+              {showTimer && (
+                <Timer gameId={gameStats._id} round={gameStats.round} />
+              )}
 
               <div>
                 <h2>{gameStats[opponent].username}</h2>
