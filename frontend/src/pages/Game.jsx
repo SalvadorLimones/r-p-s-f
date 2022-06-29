@@ -10,7 +10,8 @@ const Game = () => {
   const { user } = useAuth();
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [choiceSent, setChoiceSent] = useState(false);
+  const [showTimer, setShowTimer] = useState(true);
+  const [showPicks, setShowPicks] = useState(false);
   const [round, setRound] = useState(0);
   const [me, setMe] = useState("");
   const [opponent, setOpponent] = useState("");
@@ -28,14 +29,6 @@ const Game = () => {
       setMe("playerTwo");
       setOpponent("playerOne");
     }
-  };
-
-  const timeExpired = (left) => {
-    console.log("LEFT: ", left);
-    if (left === 0) sendChoice(id, "none", "none");
-    setPick("none");
-    setFuture("none");
-    setChoiceSent(true);
   };
 
   const fetch = async (gameId) => {
@@ -56,7 +49,6 @@ const Game = () => {
   };
 
   const cancel = async (gameId) => {
-    console.log("GAMEIDTODELETE:", gameId);
     const resp = await del("/game/" + gameId);
     fetch();
   };
@@ -70,13 +62,16 @@ const Game = () => {
     });
     setPick("none");
     setFuture("none");
-    setChoiceSent(true);
+    setShowTimer(false);
   };
 
   useEffect(() => {
+    setShowPicks(true);
     setTimeout(() => {
-      setChoiceSent(false);
-    }, 1000);
+      setShowPicks(false);
+      setShowTimer(true);
+    }, 3000);
+
     // eslint-disable-next-line
   }, [round]);
 
@@ -109,79 +104,89 @@ const Game = () => {
                 <h2>{gameStats[me].username}</h2>
                 <h3>{gameStats[me].score}</h3>
               </div>
-              {choiceSent ? (
-                gameStats.round > 1 && (
-                  <div>
-                    <p>
-                      My pick:{" "}
-                      {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
-                    </p>
-                    <p>
-                      Opponents pick:{" "}
-                      {gameStats.rounds[gameStats.round - 2][opponent + "Pick"]}
-                    </p>
-                  </div>
-                )
-              ) : (
-                <Timer onChange={(e) => timeExpired(e.target.value)} />
+              {showPicks && gameStats.round > 1 && (
+                <div>
+                  <p>
+                    My pick:{" "}
+                    {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
+                  </p>
+                  <p>
+                    Opponents pick:{" "}
+                    {gameStats.rounds[gameStats.round - 2][opponent + "Pick"]}
+                  </p>
+                </div>
               )}
+
+              {showTimer && <Timer />}
 
               <div>
                 <h2>{gameStats[opponent].username}</h2>
                 <h3>{gameStats[opponent].score}</h3>
               </div>
             </div>
-
-            <div>
-              {gameStats.round > 1 && (
-                <p>
-                  Avoid:{" "}
-                  {gameStats.rounds[gameStats.round - 2][opponent + "Future"]}
-                </p>
-              )}
-              <p>Choice:</p>
-              <input type="radio" name="pick" onClick={() => setPick("rock")} />
-              Rock
-              <input
-                type="radio"
-                name="pick"
-                onClick={() => setPick("paper")}
-              />
-              Paper
-              <input
-                type="radio"
-                name="pick"
-                onClick={() => setPick("scissors")}
-              />
-              Scissors
-            </div>
-            <div>
-              <p>Future:</p>
-              <input
-                type="radio"
-                name="future"
-                onClick={() => setFuture("rock")}
-              />
-              Rock
-              <input
-                type="radio"
-                name="future"
-                onClick={() => setFuture("paper")}
-              />
-              Paper
-              <input
-                type="radio"
-                name="future"
-                onClick={() => setFuture("scissors")}
-              />
-              Scissors
-            </div>
-            <button
-              disabled={pick === "none" || future === "none"}
-              onClick={() => sendChoice(id, pick, future)}
-            >
-              Submit
-            </button>
+            {showTimer && (
+              <div>
+                {" "}
+                <div>
+                  {gameStats.round > 1 && (
+                    <p>
+                      Avoid:{" "}
+                      {
+                        gameStats.rounds[gameStats.round - 2][
+                          opponent + "Future"
+                        ]
+                      }
+                    </p>
+                  )}
+                  <p>Choice:</p>
+                  <input
+                    type="radio"
+                    name="pick"
+                    onClick={() => setPick("rock")}
+                  />
+                  Rock
+                  <input
+                    type="radio"
+                    name="pick"
+                    onClick={() => setPick("paper")}
+                  />
+                  Paper
+                  <input
+                    type="radio"
+                    name="pick"
+                    onClick={() => setPick("scissors")}
+                  />
+                  Scissors
+                </div>
+                <div>
+                  <p>Future:</p>
+                  <input
+                    type="radio"
+                    name="future"
+                    onClick={() => setFuture("rock")}
+                  />
+                  Rock
+                  <input
+                    type="radio"
+                    name="future"
+                    onClick={() => setFuture("paper")}
+                  />
+                  Paper
+                  <input
+                    type="radio"
+                    name="future"
+                    onClick={() => setFuture("scissors")}
+                  />
+                  Scissors
+                </div>
+                <button
+                  disabled={pick === "none" || future === "none"}
+                  onClick={() => sendChoice(id, pick, future)}
+                >
+                  Submit
+                </button>
+              </div>
+            )}
           </div>
         )
       )}
