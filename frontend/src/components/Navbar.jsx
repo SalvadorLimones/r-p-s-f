@@ -11,10 +11,9 @@ const Navbar = () => {
   return (
     <nav
       style={{
-        backgroundColor: "grey",
         display: "flex",
         justifyContent: "space-between",
-        padding: " 10px 30px",
+        padding: " 10px 200px",
       }}
     >
       <div>

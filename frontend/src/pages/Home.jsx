@@ -13,8 +13,11 @@ const Home = () => {
   } = useGlobalCounter();
   const { auth, token } = useAuth();
   return (
-    <>
-      <div>Home</div>
+    <div className="home-page">
+      <div className="background-top"></div>
+      <div className="background-bottom"></div>
+      <div className="logo"></div>
+      {/*       <div>Home</div>
       <p>{token ? "Logged in" : "Anonymus user"}</p>
       <h3>Local counter:</h3>
       <p>{valueHome}</p>
@@ -24,8 +27,8 @@ const Home = () => {
       <p>{value}</p>
       <button onClick={() => goDown()}>-</button>
       <button onClick={() => goUp()}>+</button>
-      {!token ? <button onClick={auth}>Login</button> : "Welcome!"}
-    </>
+      {!token ? <button onClick={auth}>Login</button> : "Welcome!"} */}
+    </div>
   );
 };
 
