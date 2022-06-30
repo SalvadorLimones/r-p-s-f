@@ -7,20 +7,19 @@ const Timer = ({ gameId, round }) => {
   const [time, setTime] = useState(20);
   const { post } = todoApi();
 
-  if (time === 0) {
-    clearInterval(id);
-    const resp = post("/game/pick/" + gameId, {
-      round: round,
-      Pick: "none",
-      Future: "none",
-    });
-  }
-
   useEffect(() => {
     const loop = () => {
       return setInterval(() => {
         const now = Date.now();
         const secs = (start.current - now) / 1000;
+        if (Math.floor(secs) === 0) {
+          clearInterval(id);
+          const resp = post("/game/pick/" + gameId, {
+            round: round,
+            Pick: "none",
+            Future: "none",
+          });
+        }
         setTime(Math.floor(secs));
       }, 1000);
     };
