@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   lastTimeOnline: { type: Date },
   online: { type: Boolean },
-  lastTimePlaying: { type: Date },
+  lastTimePlayed: { type: Date },
   playing: { type: Boolean },
   played: { type: Number, default: 0 },
   won: { type: Number, default: 0 },

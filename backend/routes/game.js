@@ -221,10 +221,7 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
     me = "playerTwo";
   }
 
-  if (
-    !game.rounds[round - 1] &&
-    (game.rounds[round - 2]?.finished || !game.rounds[round - 2])
-  ) {
+  if (!game.rounds[round - 1] && game.rounds[round - 2]?.finished) {
     game.rounds.push({
       roundNo: round,
       started: Date.now(),

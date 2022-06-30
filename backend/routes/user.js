@@ -78,7 +78,7 @@ router.post("/login", auth({ block: false }), async (req, res) => {
       providers: user ? user.providers : { [provider]: openId },
     },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "5h" }
   );
   res.json({ sessionToken });
 });
@@ -98,7 +98,7 @@ router.post("/create", auth({ block: true }), async (req, res) => {
       providers: user.providers,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "5h" }
   );
   res.json({ sessionToken });
 });
@@ -107,8 +107,13 @@ router.post("/create", auth({ block: true }), async (req, res) => {
 router.post("/loggedin", auth({ block: true }), async (req, res) => {
   const user = await User.findById(res.locals.user.userId);
   if (!user) return res.status(400).send("User not found!");
+  if (req.body.playing) {
+    console.log("PLAYING!");
+    user.lastTimePlayed = Date.now();
+  } else {
+    user.lastTimeOnline = Date.now();
+  }
 
-  user.lastTimeOnline = Date.now();
   await user.save((err) => {
     if (err) return res.status(500).send(err);
   });
@@ -171,7 +176,7 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
       ? (friend.online = true)
       : (friend.online = false);
 
-    Date.now() - friend.lastTimePlaying < 15000
+    Date.now() - friend.lastTimePlayed < 15000
       ? (friend.playing = true)
       : (friend.playing = false);
   }

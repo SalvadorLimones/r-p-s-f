@@ -30,6 +30,11 @@ const AuthProvider = ({ children }) => {
   const loggedin = async () => {
     console.log("logggedin!");
     const resp = await post("/user/loggedin");
+    if (resp.status !== 200) {
+      clearInterval(keepMeLoggedin);
+      localStorage.removeItem("token");
+      setToken(null);
+    }
     console.log(resp.data);
   };
 
@@ -46,8 +51,8 @@ const AuthProvider = ({ children }) => {
       keepMeLoggedin = setInterval(loggedin, 10000);
     } catch (err) {
       clearInterval(keepMeLoggedin);
-      setToken(null);
       localStorage.removeItem("token");
+      setToken(null);
     }
   };
   const logout = () => {

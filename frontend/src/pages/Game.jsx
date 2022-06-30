@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
 
 let getGameData;
+let keepMePlaying;
 const Game = () => {
   const { get, post, del } = todoApi();
   const { user } = useAuth();
@@ -20,6 +21,14 @@ const Game = () => {
   const [pick, setPick] = useState("none");
   const [future, setFuture] = useState("none");
   const navigate = useNavigate();
+
+  const playing = async () => {
+    console.log("playing!");
+    const resp = await post("/user/loggedin", { playing: true });
+    if (resp.status !== 200) {
+      clearInterval(keepMePlaying);
+    }
+  };
 
   const assignRoles = (playerOne) => {
     if (user.userId === playerOne.id) {
@@ -86,8 +95,10 @@ const Game = () => {
     setId(gameId);
     fetch(gameId);
     getGameData = setInterval(() => fetch(gameId), 3000);
+    keepMePlaying = setInterval(playing, 10000);
     return () => {
       clearInterval(getGameData);
+      clearInterval(keepMePlaying);
     };
     // eslint-disable-next-line
   }, []);

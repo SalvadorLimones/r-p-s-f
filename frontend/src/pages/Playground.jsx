@@ -42,13 +42,16 @@ const Playground = () => {
             <td> {user.won}</td>
             <td> {user.played - user.won} </td>
             <td>
-              <button disabled={user.invited} onClick={() => invite(user._id)}>
+              <button
+                disabled={user.invited || !user.online || user.playing}
+                onClick={() => invite(user._id)}
+              >
                 INVITE
               </button>
             </td>
             <td>
               <button
-                disabled={!user.invited}
+                disabled={!user.invited || !user.online || user.playing}
                 onClick={() => accept(user.invited)}
               >
                 ACCEPT
