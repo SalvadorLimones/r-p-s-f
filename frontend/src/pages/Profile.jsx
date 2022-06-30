@@ -16,7 +16,7 @@ const Profile = () => {
   return (
     <>
       <div>Profile</div>
-      <p>{token ? "Logged in" : "Anonymus user"}</p>
+      {/*       <p>{token ? "Logged in" : "Anonymus user"}</p>
       <h3>Local counter:</h3>
       <p>{valueProfile}</p>
       <button onClick={() => goDown("profile")}>-</button>
@@ -24,7 +24,7 @@ const Profile = () => {
       <h3>Global counter:</h3>
       <p>{value}</p>
       <button onClick={() => goDown()}>-</button>
-      <button onClick={() => goUp()}>+</button>
+      <button onClick={() => goUp()}>+</button> */}
     </>
   );
 };

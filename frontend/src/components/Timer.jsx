@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { todoApi } from "../api/todoApi";
-import { useAuth } from "../providers/auth";
+
 let id;
 const Timer = ({ gameId, round }) => {
-  const start = useRef(Date.now() + 10000);
-  const { user } = useAuth();
+  const start = useRef(Date.now() + 20000);
   const [time, setTime] = useState(20);
   const { post } = todoApi();
 
