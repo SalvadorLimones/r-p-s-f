@@ -30,7 +30,7 @@ const Championship = () => {
         <td>{user.username}</td>
         <td> {user.played}</td>
         <td> {user.won}</td>
-        <td> {user.won ? (user.won / user.played) * 100 : 0} </td>
+        <td> {user.won ? ((user.won / user.played) * 100).toFixed(2) : 0} </td>
       </tr>
     );
   };

@@ -158,23 +158,25 @@ const Game = () => {
                   )}
                   <p>Choice:</p>
                   <input
-                    type="radio"
+                    type="button"
                     name="pick"
+                    className="rock"
                     onClick={() => setPick("rock")}
                   />
-                  Rock
+
                   <input
-                    type="radio"
+                    type="button"
                     name="pick"
+                    className="paper"
                     onClick={() => setPick("paper")}
                   />
-                  Paper
+
                   <input
-                    type="radio"
+                    type="button"
                     name="pick"
+                    className="scissors"
                     onClick={() => setPick("scissors")}
                   />
-                  Scissors
                 </div>
                 <div>
                   <p>Future:</p>

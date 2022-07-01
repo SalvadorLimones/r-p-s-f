@@ -12,12 +12,12 @@ const Navbar = () => {
     <nav
       style={{
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "center",
         padding: " 10px 200px",
       }}
     >
       <div>
-        <button onClick={() => nav("/")}>Home</button>
+        {!token && <button onClick={() => nav("/")}>Home</button>}
         <button onClick={() => nav("/rules")}>Rules</button>
         {token && (
           <>
@@ -26,15 +26,9 @@ const Navbar = () => {
               Championship
             </button>
             <button onClick={() => navigate("/friends")}>Friends</button>
+            <button onClick={logout}>Logout</button>
             {/* <Link to="/profile">Profile</Link> */}
           </>
-        )}
-      </div>
-      <div>
-        {!token ? (
-          <button onClick={auth}>Login</button>
-        ) : (
-          <button onClick={logout}>Logout</button>
         )}
       </div>
     </nav>

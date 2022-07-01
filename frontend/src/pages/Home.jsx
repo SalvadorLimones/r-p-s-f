@@ -17,6 +17,7 @@ const Home = () => {
       <div className="background-top"></div>
       <div className="background-bottom"></div>
       <div className="logo"></div>
+      <button onClick={auth}>Login</button>
       {/*       <div>Home</div>
       <p>{token ? "Logged in" : "Anonymus user"}</p>
       <h3>Local counter:</h3>
