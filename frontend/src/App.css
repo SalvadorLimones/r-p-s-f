@@ -12,6 +12,10 @@ body {
   text-align: center;
 }
 
+p {
+  margin: 0;
+}
+
 .table-page {
   width: 60%;
   padding: 0 20%;
@@ -112,30 +116,99 @@ div[class$="bottom-2"] {
   color: #dd4f13;
 }
 
+.game-page {
+  font-size: 24px;
+}
+.game-message-board {
+  width: 250px;
+  height: 200px;
+  background-image: url("../public/images/button-frame.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.pick-container,
+.score-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.score-container {
+  margin: 0;
+  padding: 0 35%;
+  justify-content: space-around;
+}
+
+.round {
+  font-size: 28px;
+  color: #dd4f13;
+  margin: 0;
+}
+
+.pick-container {
+  justify-content: center;
+  font-size: 20px;
+  height: 70px;
+}
+
+div[class^="pick-frame"],
+div[class^="future-frame"] {
+  margin: 5px;
+  padding: 5px;
+  position: relative;
+}
+
+div[class^="pick-frame"] {
+  width: 60px;
+  height: 60px;
+}
+
+div[class^="future-frame"] {
+  width: 40px;
+  height: 40px;
+}
+
+.pick-frame-selected,
+.future-frame-selected {
+  border: 4px solid #dd4f13;
+  border-radius: 50%;
+}
+
+div[class^="pick-frame"] input,
+div[class^="future-frame"] input {
+  border: none;
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+div[class^="pick-frame"] input {
+  width: 50px;
+  height: 50px;
+}
+div[class^="future-frame"] input {
+  width: 35px;
+  height: 35px;
+}
+
 .rock {
-  width: 50px;
-  height: 50px;
-  border: none;
-  background-color: transparent;
   background-image: url("../public/images/rock.png");
-  background-size: contain;
-  background-repeat: no-repeat;
 }
+
 .paper {
-  width: 50px;
-  height: 50px;
-  border: none;
-  background-color: transparent;
   background-image: url("../public/images/paper.png");
-  background-size: contain;
-  background-repeat: no-repeat;
 }
+
 .scissors {
-  width: 50px;
-  height: 50px;
-  border: none;
-  background-color: transparent;
   background-image: url("../public/images/scissors.png");
-  background-size: contain;
+}
+
+.submit-button {
+  width: 250px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  background-image: url("../public/images/button-frame.png");
   background-repeat: no-repeat;
+  background-size: 100% 100%;
 }

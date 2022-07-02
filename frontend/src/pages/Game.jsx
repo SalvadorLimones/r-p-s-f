@@ -3,6 +3,7 @@ import { todoApi } from "../api/todoApi";
 import { useAuth } from "../providers/auth";
 import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
+import { randomClassName } from "../hooks/randomClassName";
 
 let getGameData;
 let keepMePlaying;
@@ -84,7 +85,7 @@ const Game = () => {
     setTimeout(() => {
       setShowPicks(false);
       setShowTimer(true);
-    }, 3000);
+    }, 4200);
 
     // eslint-disable-next-line
   }, [round]);
@@ -104,7 +105,9 @@ const Game = () => {
   }, []);
 
   return (
-    <div>
+    <div className="game-page">
+      <div className={randomClassName("top")}></div>
+      <div className={randomClassName("bottom")}></div>
       {!started ? (
         <div>
           <h2>Waiting for other player to join..</h2>
@@ -114,38 +117,44 @@ const Game = () => {
         gameStats && (
           <div>
             {finished && <h2>DONE!</h2>}
-            <div>Round {gameStats.round}</div>
+            <div className="round">Round {gameStats.round}</div>
             <div>
-              <div>
-                <h2>{gameStats[me].username}</h2>
-                <h3>{gameStats[me].score}</h3>
-              </div>
-              {showPicks && gameStats.round > 1 && (
+              <div className="score-container">
                 <div>
-                  <p>
-                    My pick:{" "}
-                    {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
-                  </p>
-                  <p>
-                    Opponents pick:{" "}
-                    {gameStats.rounds[gameStats.round - 2][opponent + "Pick"]}
-                  </p>
+                  <h2>{gameStats[me].username}</h2>
+                  <h3>{gameStats[me].score}</h3>
                 </div>
-              )}
-
+                <div className="game-message-board">
+                  {showPicks && gameStats.round > 1 && (
+                    <>
+                      <p>
+                        My pick:{" "}
+                        {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
+                      </p>
+                      <p>
+                        Opponents pick:{" "}
+                        {
+                          gameStats.rounds[gameStats.round - 2][
+                            opponent + "Pick"
+                          ]
+                        }
+                      </p>
+                    </>
+                  )}
+                </div>
+                <div>
+                  <h2>{gameStats[opponent].username}</h2>
+                  <h3>{gameStats[opponent].score}</h3>
+                </div>
+              </div>
               {showTimer && (
                 <Timer gameId={gameStats._id} round={gameStats.round} />
               )}
-
-              <div>
-                <h2>{gameStats[opponent].username}</h2>
-                <h3>{gameStats[opponent].score}</h3>
-              </div>
             </div>
             {showTimer && (
               <div>
-                {" "}
                 <div>
+                  <p>Choice:</p>
                   {gameStats.round > 1 && (
                     <p>
                       Avoid:{" "}
@@ -156,50 +165,96 @@ const Game = () => {
                       }
                     </p>
                   )}
-                  <p>Choice:</p>
-                  <input
-                    type="button"
-                    name="pick"
-                    className="rock"
-                    onClick={() => setPick("rock")}
-                  />
+                  <div className="pick-container">
+                    <div
+                      className={
+                        pick === "rock" ? "pick-frame-selected" : "pick-frame"
+                      }
+                    >
+                      <input
+                        type="button"
+                        name="pick"
+                        className="rock"
+                        onClick={() => setPick("rock")}
+                      />
+                    </div>
+                    <div
+                      className={
+                        pick === "paper" ? "pick-frame-selected" : "pick-frame"
+                      }
+                    >
+                      <input
+                        type="button"
+                        name="pick"
+                        className="paper"
+                        onClick={() => setPick("paper")}
+                      />
+                    </div>
+                    <div
+                      className={
+                        pick === "scissors"
+                          ? "pick-frame-selected"
+                          : "pick-frame"
+                      }
+                    >
+                      <input
+                        type="button"
+                        name="pick"
+                        className="scissors"
+                        onClick={() => setPick("scissors")}
+                      />
+                    </div>
+                  </div>
+                  <div></div>
 
-                  <input
-                    type="button"
-                    name="pick"
-                    className="paper"
-                    onClick={() => setPick("paper")}
-                  />
-
-                  <input
-                    type="button"
-                    name="pick"
-                    className="scissors"
-                    onClick={() => setPick("scissors")}
-                  />
-                </div>
-                <div>
                   <p>Future:</p>
-                  <input
-                    type="radio"
-                    name="future"
-                    onClick={() => setFuture("rock")}
-                  />
-                  Rock
-                  <input
-                    type="radio"
-                    name="future"
-                    onClick={() => setFuture("paper")}
-                  />
-                  Paper
-                  <input
-                    type="radio"
-                    name="future"
-                    onClick={() => setFuture("scissors")}
-                  />
-                  Scissors
+                  <div className="pick-container">
+                    <div
+                      className={
+                        future === "rock"
+                          ? "future-frame-selected"
+                          : "future-frame"
+                      }
+                    >
+                      <input
+                        type="button"
+                        name="future"
+                        className="rock future"
+                        onClick={() => setFuture("rock")}
+                      />
+                    </div>
+                    <div
+                      className={
+                        future === "paper"
+                          ? "future-frame-selected"
+                          : "future-frame"
+                      }
+                    >
+                      <input
+                        type="button"
+                        name="future"
+                        className="paper future"
+                        onClick={() => setFuture("paper")}
+                      />
+                    </div>
+                    <div
+                      className={
+                        future === "scissors"
+                          ? "future-frame-selected"
+                          : "future-frame"
+                      }
+                    >
+                      <input
+                        type="button"
+                        name="future"
+                        className="scissors future"
+                        onClick={() => setFuture("scissors")}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <button
+                  className="submit-button"
                   disabled={pick === "none" || future === "none"}
                   onClick={() => sendChoice(id, pick, future)}
                 >
