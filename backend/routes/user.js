@@ -34,6 +34,7 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   );
 
   if (!response) return res.sendStatus(500);
+  console.log(response);
   if (response.status !== 200) return res.sendStatus(401);
 
   let openId;
