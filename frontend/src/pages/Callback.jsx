@@ -13,7 +13,7 @@ const Callback = () => {
       if (code) {
         await login(code, "google");
       }
-      navigate("/friends");
+      navigate("/rules");
     };
     loginWithCode();
     // eslint-disable-next-line

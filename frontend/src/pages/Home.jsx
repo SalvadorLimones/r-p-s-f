@@ -6,9 +6,15 @@ const Home = () => {
   const { auth } = useAuth();
   return (
     <div className="home-page">
-      <div className={randomClassName("top")}></div>
-      <div className={randomClassName("bottom")}></div>
-      <div className="logo"></div>
+      <div>
+        <div className={randomClassName("top")}></div>
+        <div className={randomClassName("bottom")}></div>
+        <div className="logo">
+          <p className="please-log-in">
+            Please log in with your Google account to play!
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

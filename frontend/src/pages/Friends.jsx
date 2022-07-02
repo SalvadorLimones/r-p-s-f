@@ -9,8 +9,19 @@ const Friends = () => {
     <div>
       <div className={randomClassName("top")}></div>
       <div className={randomClassName("bottom")}></div>
-      <button onClick={() => setPage(1)}>Dashboard</button>
-      <button onClick={() => setPage(2)}>Playground</button>
+      <h3>{page === 1 ? "Dashboard" : "Playground"}</h3>
+      <button
+        className={page === 1 ? "friends-button selected" : "friends-button"}
+        onClick={() => setPage(1)}
+      >
+        Dashboard
+      </button>
+      <button
+        className={page === 2 ? "friends-button selected" : "friends-button"}
+        onClick={() => setPage(2)}
+      >
+        Playground
+      </button>
       {page === 1 && <Dashboard />}
       {page === 2 && <Playground />}
     </div>

@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { todoApi } from "../api/todoApi";
 import { useNavigate } from "react-router-dom";
 import { randomClassName } from "../hooks/randomClassName";
+import { useAuth } from "../providers/auth";
 
 const Championship = () => {
   const { get, post } = todoApi();
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const { user: me } = useAuth();
 
   const joinOrCreate = async () => {
     let resp;
     resp = await post("/game/join");
     if (resp.status === 404) resp = await post("game/start/championship");
     if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
-    console.log("JOINED GAME: ", resp);
   };
 
   const getUsers = async () => {
@@ -26,7 +27,7 @@ const Championship = () => {
   const renderUser = (user, i) => {
     console.log(user);
     return (
-      <tr key={i}>
+      <tr key={i} className={user.username === me.username ? "selected" : ""}>
         <td>{i + 1}</td>
         <td>{user.username}</td>
         <td> {user.played}</td>
@@ -42,12 +43,14 @@ const Championship = () => {
   }, []);
 
   return (
-    <div>
+    <div className="table-page">
       <div className={randomClassName("top")}></div>
       <div className={randomClassName("bottom")}></div>
-      <button onClick={() => joinOrCreate()}>Ready to Play!</button>
       <h3>Leaderboard</h3>
-      <table>
+      <button className="play-button" onClick={() => joinOrCreate()}>
+        Ready to Play!
+      </button>
+      <table className="table">
         <thead>
           <tr>
             <th>Rank</th>

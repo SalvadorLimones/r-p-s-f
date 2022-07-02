@@ -66,8 +66,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      <h3>Dashboard</h3>
+    <div className="table-page">
       <table>
         <thead>
           <tr>

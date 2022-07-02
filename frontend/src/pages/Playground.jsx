@@ -74,8 +74,7 @@ const Playground = () => {
   }, []);
 
   return (
-    <div>
-      <h3>Playground</h3>
+    <div className="table-page">
       <table>
         <thead>
           <tr>
