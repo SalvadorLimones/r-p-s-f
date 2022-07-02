@@ -35,33 +35,13 @@ router.post("/login", auth({ block: false }), async (req, res) => {
 
   if (!response) return res.sendStatus(500);
   console.log(response);
-  if (response.status !== 200) return res.sendStatus(401);
+  if (response.status !== 200) return res.status(401).send(response);
 
   let openId;
-  const onlyOauth = !response.data.id_token;
 
-  if (onlyOauth) {
-    let token = response.data.access_token;
-    const userResponse = await http.post(
-      config.auth[provider].user_endpoint,
-      {},
-      {
-        headers: {
-          authorization: "Bearer " + token,
-        },
-      }
-    );
-
-    if (!userResponse) return res.sendStatus(500);
-    if (userResponse.status !== 200) return res.sendStatus(401);
-
-    const id = config.auth[provider].user_id;
-    openId = userResponse.data[id];
-  } else {
-    const decoded = jwt.decode(response.data.id_token);
-    if (!decoded) return res.sendStatus(500);
-    openId = decoded.sub;
-  }
+  const decoded = jwt.decode(response.data.id_token);
+  if (!decoded) return res.sendStatus(500);
+  openId = decoded.sub;
 
   //megkeresi a user-t, ha nincs csinál egyet:
   const key = "providers." + provider;
