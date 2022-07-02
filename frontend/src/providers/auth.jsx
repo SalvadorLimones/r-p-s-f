@@ -1,5 +1,4 @@
 import { React, useState, useContext, createContext, useEffect } from "react";
-import http from "axios";
 import jwt from "jwt-decode";
 import { todoApi } from "../api/todoApi";
 import config from "../app.config";
@@ -40,7 +39,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (code, provider) => {
     try {
-      const resp = await http.post(config.api_url + "/user/login", {
+      const resp = await post("/user/login", {
         code: code,
         provider: provider,
       });
