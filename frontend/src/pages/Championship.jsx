@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { todoApi } from "../api/todoApi";
 import { useNavigate } from "react-router-dom";
+import { randomClassName } from "../hooks/randomClassName";
 
 const Championship = () => {
   const { get, post } = todoApi();
@@ -42,6 +43,8 @@ const Championship = () => {
 
   return (
     <div>
+      <div className={randomClassName("top")}></div>
+      <div className={randomClassName("bottom")}></div>
       <button onClick={() => joinOrCreate()}>Ready to Play!</button>
       <h3>Leaderboard</h3>
       <table>

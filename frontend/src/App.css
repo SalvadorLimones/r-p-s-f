@@ -1,11 +1,11 @@
 @font-face {
   font-family: primaryFont;
-  src: url(http://localhost:3000/fonts/LovedbytheKing-Regular.ttf);
+  src: url("../public/fonts/LovedbytheKing-Regular.ttf");
 }
 
 body {
   margin: 0;
-  background-image: url("http://localhost:3000/images/background.png");
+  background-image: url("../public/images/background.png");
   font-family: primaryFont;
 }
 .App {
@@ -18,34 +18,46 @@ button {
 
 nav button {
   margin: 0 30px;
-  background: none;
   border: none;
+  background: none;
   font-size: 28px;
-  font-weight: 500;
-  font-weight: 600;
   letter-spacing: 0.2rem;
 }
 
-.background-top {
+.selected {
+  color: #dd4f13;
+}
+
+div[class^="background"] {
   width: 150px;
   height: 150px;
   position: fixed;
-  top: 0;
-  right: 0;
-  background-image: url("http://localhost:3000/images/background-decoration-paper.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
-.background-bottom {
-  width: 150px;
-  height: 150px;
-  position: fixed;
+div[class^="background-top"] {
+  top: 0;
+  right: 0;
+  background-position: top;
+}
+div[class^="background-bottom"] {
   bottom: 0;
   left: 0;
-  background-image: url("http://localhost:3000/images/background-decoration-future.png");
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-position: bottom;
 }
+div[class$="top-1"] {
+  background-image: url("../public/images/background-decoration-paper.png");
+}
+div[class$="top-2"] {
+  background-image: url("../public/images/background-decoration-scissors.png");
+}
+div[class$="bottom-1"] {
+  background-image: url("../public/images/background-decoration-future.png");
+}
+div[class$="bottom-2"] {
+  background-image: url("../public/images/background-decoration-rock.png");
+}
+
 .logo {
   width: 350px;
   height: 350px;
@@ -53,7 +65,7 @@ nav button {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-image: url("http://localhost:3000/images/logo.png");
+  background-image: url("../public/images/logo.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -63,7 +75,7 @@ nav button {
   height: 50px;
   border: none;
   background-color: transparent;
-  background-image: url("http://localhost:3000/images/rock.png");
+  background-image: url("../public/images/rock.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -72,7 +84,7 @@ nav button {
   height: 50px;
   border: none;
   background-color: transparent;
-  background-image: url("http://localhost:3000/images/paper.png");
+  background-image: url("../public/images/paper.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -81,7 +93,7 @@ nav button {
   height: 50px;
   border: none;
   background-color: transparent;
-  background-image: url("http://localhost:3000/images/scissors.png");
+  background-image: url("../public/images/scissors.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
