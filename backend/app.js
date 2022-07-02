@@ -11,11 +11,7 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.APP_URL,
-  })
-);
+app.use(cors());
 app.use(express.json());
 
 app.use(
