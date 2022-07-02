@@ -33,14 +33,14 @@ router.post("/login", auth({ block: false }), async (req, res) => {
     }
   );
 
-  if (!response) return res.sendStatus(500);
+  if (!response) return res.status(500).send("no response!");
   console.log(response);
   if (response.status !== 200) return res.status(401).send(response);
 
   let openId;
 
   const decoded = jwt.decode(response.data.id_token);
-  if (!decoded) return res.sendStatus(500);
+  if (!decoded) return res.status(500).send("not decoded");
   openId = decoded.sub;
 
   //megkeresi a user-t, ha nincs csinál egyet:
