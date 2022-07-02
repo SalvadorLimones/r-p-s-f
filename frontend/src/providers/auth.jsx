@@ -46,8 +46,7 @@ const AuthProvider = ({ children }) => {
       setToken(resp.data.sessionToken);
       localStorage.setItem("token", resp.data.sessionToken);
       setUser(jwt(resp.data.sessionToken));
-      loggedin();
-      keepMeLoggedin = setInterval(loggedin, 10000);
+      console.log("USER,", jwt(resp.data.sessionToken));
     } catch (err) {
       clearInterval(keepMeLoggedin);
       localStorage.removeItem("token");
@@ -77,11 +76,21 @@ const AuthProvider = ({ children }) => {
     if (tokenInStorage) {
       setToken(tokenInStorage);
       setUser(jwt(tokenInStorage));
+      if (user?.userId) {
+        loggedin();
+        keepMeLoggedin = setInterval(loggedin, 10000);
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (user?.userId) {
       loggedin();
       keepMeLoggedin = setInterval(loggedin, 10000);
     }
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   return (
     <div>

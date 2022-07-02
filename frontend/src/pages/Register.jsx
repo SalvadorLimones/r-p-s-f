@@ -8,7 +8,7 @@ const Register = () => {
   const { register, user } = useAuth();
 
   useEffect(() => {
-    if (user.userId) navigate("/profile");
+    if (user.userId) navigate("/rules");
     // eslint-disable-next-line
   }, [user]);
 
