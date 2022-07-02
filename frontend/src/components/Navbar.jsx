@@ -40,7 +40,7 @@ const Navbar = () => {
         </button>
         {token && (
           <>
-            <button
+            {/*           <button
               className={selected === "profile" && "selected"}
               onClick={() => {
                 setSelected("profile");
@@ -48,7 +48,7 @@ const Navbar = () => {
               }}
             >
               Profile
-            </button>
+            </button> */}
             <button
               className={selected === "championship" && "selected"}
               onClick={() => {
