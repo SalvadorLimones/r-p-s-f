@@ -34,19 +34,20 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   );
 
   if (!response) return res.status(500).send("no response!");
-  console.log(response);
+  console.log("TOKENresp:", response);
   if (response.status !== 200) return res.status(401).send(response);
 
   let openId;
 
   const decoded = jwt.decode(response.data.id_token);
+  console.log("DECODED:", decoded);
   if (!decoded) return res.status(500).send("not decoded");
   openId = decoded.sub;
 
   //megkeresi a user-t, ha nincs csinál egyet:
   const key = "providers." + provider;
   let user = await User.findOne({ [key]: openId });
-
+  console.log("USER:", user);
   if (user && res.locals.user?.providers) {
     user.providers = { ...user.providers, ...res.locals.user.providers };
     user = await user.save();
