@@ -3,10 +3,10 @@ const config = {
     google: {
       client_id:
         process.env.GOOGLE_CLIENT_ID ||
-        "423125049963-vnhlm59vvirdjsquu0efhqvq5u91orks.apps.googleusercontent.com",
+        "940759968390-adatai7857f9o4vu7e5u53i6g4bk0rfl.apps.googleusercontent.com",
       client_secret:
         process.env.GOOGLE_CLIENT_SECRET ||
-        "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",
+        "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",
       redirect_uri:
         process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/callback",
       token_endpoint: "https://oauth2.googleapis.com/token",
