@@ -7,8 +7,8 @@ const Friends = () => {
   const [page, setPage] = useState(1);
   return (
     <div>
-      <div className={randomClassName("position", "top", 2)}></div>
-      <div className={randomClassName("position", "bottom", 2)}></div>
+      <div className={randomClassName("background", "top", 2)}></div>
+      <div className={randomClassName("background", "bottom", 2)}></div>
       <h3>{page === 1 ? "Dashboard" : "Playground"}</h3>
       <button
         className={page === 1 ? "friends-button selected" : "friends-button"}

@@ -44,8 +44,8 @@ const Championship = () => {
 
   return (
     <div className="table-page">
-      <div className={randomClassName("top")}></div>
-      <div className={randomClassName("bottom")}></div>
+      <div className={randomClassName("background", "top", 2)}></div>
+      <div className={randomClassName("background", "bottom", 2)}></div>
       <h3>Leaderboard</h3>
       <button className="play-button" onClick={() => joinOrCreate()}>
         Ready to Play!

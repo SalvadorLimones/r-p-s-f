@@ -5,8 +5,8 @@ const Rules = () => {
   return (
     <div>
       <h2>Game rules</h2>
-      <div className={randomClassName("position", "top", 2)}></div>
-      <div className={randomClassName("position", "bottom", 2)}></div>
+      <div className={randomClassName("background", "top", 2)}></div>
+      <div className={randomClassName("background", "bottom", 2)}></div>
     </div>
   );
 };

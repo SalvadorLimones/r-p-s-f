@@ -117,8 +117,8 @@ const Game = () => {
 
   return (
     <div className="game-page">
-      <div className={randomClassName("position", "top", 2)}></div>
-      <div className={randomClassName("position", "bottom", 2)}></div>
+      <div className={randomClassName("background", "top", 2)}></div>
+      <div className={randomClassName("background", "bottom", 2)}></div>
       {!started ? (
         <div>
           <h2>Waiting for other player to join..</h2>
