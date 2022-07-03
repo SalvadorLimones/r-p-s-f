@@ -122,6 +122,9 @@ div[class$="bottom-2"] {
 .game-message-board {
   width: 250px;
   height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-image: url("../public/images/button-frame.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -211,4 +214,26 @@ div[class^="future-frame"] input {
   background-image: url("../public/images/button-frame.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
+}
+
+div[class^="decision"] {
+  width: 95%;
+  height: 95%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.decision-winner-1 {
+  background-image: url("../public/images/winner-1.jpeg");
+}
+
+.decision-winner-2 {
+  background-image: url("../public/images/winner-2.jpeg");
+}
+.decision-loser-1 {
+  background-image: url("../public/images/loser-1.jpeg");
+}
+.decision-loser-2 {
+  background-image: url("../public/images/loser-2.jpg");
 }

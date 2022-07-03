@@ -14,6 +14,7 @@ const Game = () => {
   const [finished, setFinished] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [showPicks, setShowPicks] = useState(false);
+  const [pickSent, setPickSent] = useState(false);
   const [round, setRound] = useState(0);
   const [me, setMe] = useState("");
   const [opponent, setOpponent] = useState("");
@@ -82,6 +83,7 @@ const Game = () => {
   useEffect(() => {
     setShowPicks(true);
     setShowTimer(false);
+    setPickSent(false);
     setTimeout(() => {
       setShowPicks(false);
       setShowTimer(true);
@@ -89,6 +91,15 @@ const Game = () => {
 
     // eslint-disable-next-line
   }, [round]);
+  useEffect(() => {
+    if (finished) {
+      setShowPicks(false);
+      setShowTimer(false);
+      setPickSent(true);
+    }
+
+    // eslint-disable-next-line
+  }, [finished]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -106,8 +117,8 @@ const Game = () => {
 
   return (
     <div className="game-page">
-      <div className={randomClassName("top")}></div>
-      <div className={randomClassName("bottom")}></div>
+      <div className={randomClassName("position", "top", 2)}></div>
+      <div className={randomClassName("position", "bottom", 2)}></div>
       {!started ? (
         <div>
           <h2>Waiting for other player to join..</h2>
@@ -125,33 +136,47 @@ const Game = () => {
                   <h3>{gameStats[me].score}</h3>
                 </div>
                 <div className="game-message-board">
-                  {showPicks && gameStats.round > 1 && (
-                    <>
-                      <p>
-                        My pick:{" "}
-                        {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
-                      </p>
-                      <p>
-                        Opponents pick:{" "}
-                        {
-                          gameStats.rounds[gameStats.round - 2][
-                            opponent + "Pick"
-                          ]
+                  <>
+                    {gameStats.round > 1 && showPicks && (
+                      <div>
+                        <p>
+                          My pick:{" "}
+                          {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
+                        </p>
+                        <p>
+                          Opponents pick:{" "}
+                          {
+                            gameStats.rounds[gameStats.round - 2][
+                              opponent + "Pick"
+                            ]
+                          }
+                        </p>
+                      </div>
+                    )}
+                    {finished && (
+                      <div
+                        className={
+                          gameStats.winner === gameStats[me].id
+                            ? randomClassName("decision", "winner", 2)
+                            : randomClassName("decision", "loser", 2)
                         }
-                      </p>
-                    </>
-                  )}
+                      ></div>
+                    )}
+                    {pickSent && !finished && (
+                      <p>Waiting for the other player...</p>
+                    )}
+                  </>
                 </div>
                 <div>
                   <h2>{gameStats[opponent].username}</h2>
                   <h3>{gameStats[opponent].score}</h3>
                 </div>
               </div>
-              {showTimer && (
+              {showTimer && !finished && (
                 <Timer gameId={gameStats._id} round={gameStats.round} />
               )}
             </div>
-            {showTimer && (
+            {showTimer && !finished && !pickSent && (
               <div>
                 <div>
                   <p>Choice:</p>
@@ -256,7 +281,10 @@ const Game = () => {
                 <button
                   className="submit-button"
                   disabled={pick === "none" || future === "none"}
-                  onClick={() => sendChoice(id, pick, future)}
+                  onClick={() => {
+                    sendChoice(id, pick, future);
+                    setPickSent(true);
+                  }}
                 >
                   Submit
                 </button>

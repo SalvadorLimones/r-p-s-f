@@ -68,6 +68,11 @@ router.post("/login", auth({ block: false }), async (req, res) => {
 //add a new user to database
 router.post("/create", auth({ block: true }), async (req, res) => {
   if (!req.body?.username) return res.sendStatus(400);
+  const alreadyTaken = await User.findOne({ username: req.body.username });
+  if (alreadyTaken)
+    return res
+      .status(401)
+      .send("This username has already been taken, please choose another one!");
   const user = await User.create({
     username: req.body.username,
     providers: res.locals.user.providers,

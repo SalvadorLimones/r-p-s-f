@@ -1,4 +1,4 @@
-export const randomClassName = (position) => {
-  let random = Math.floor(Math.random() * 2) + 1;
-  return "background-" + position + "-" + random;
+export const randomClassName = (type, value, count) => {
+  let random = Math.floor(Math.random() * 2) + count - 1;
+  return type + "-" + value + "-" + random;
 };
