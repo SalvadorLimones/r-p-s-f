@@ -34,20 +34,17 @@ router.post("/login", auth({ block: false }), async (req, res) => {
   );
 
   if (!response) return res.status(500).send("no response!");
-  console.log("TOKENresp:", response);
   if (response.status !== 200) return res.status(401).send(response);
 
   let openId;
 
   const decoded = jwt.decode(response.data.id_token);
-  console.log("DECODED:", decoded);
   if (!decoded) return res.status(500).send("not decoded");
   openId = decoded.sub;
 
   //megkeresi a user-t, ha nincs csinál egyet:
   const key = "providers." + provider;
   let user = await User.findOne({ [key]: openId });
-  console.log("USER:", user);
   if (user && res.locals.user?.providers) {
     user.providers = { ...user.providers, ...res.locals.user.providers };
     user = await user.save();
@@ -95,7 +92,6 @@ router.post("/loggedin", auth({ block: true }), async (req, res) => {
   const user = await User.findById(res.locals.user.userId);
   if (!user) return res.status(400).send("User not found!");
   if (req.body.playing) {
-    console.log("PLAYING!");
     user.lastTimePlayed = Date.now();
   } else {
     user.lastTimeOnline = Date.now();
@@ -169,33 +165,5 @@ router.get("/friends", auth({ block: true }), async (req, res) => {
   }
   res.status(200).send(friends);
 });
-
-//logout
-/* router.patch("/logout", async (req, res) => {
-  const id = req.body.userId;
-  if (!id) return res.status(400).send("All inputs are required!");
-
-  const user = await User.findById(id);
-  if (!user) return res.status(400).send("User not found!");
-
-  user.online = false;
-  user.save((err) => {
-    if (err) return res.status(500).send(err);
-  });
-
-  res.status(200).send("User logged out");
-}); */
-/* router.patch("/logout", auth({ block: true }), async (req, res) => {
-  if (res.locals.user?.userId) {
-    console.log(res.locals.user.userId);
-    const user = await User.findById(res.locals.user.userId);
-    if (!user) return res.status(404).send("User not found.");
-    user.online = false;
-    user.save((err) => {
-      if (err) return res.status(500).send(err);
-    });
-    res.status(200).send("User logged out");
-  }
-}); */
 
 module.exports = router;

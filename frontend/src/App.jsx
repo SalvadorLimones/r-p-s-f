@@ -3,7 +3,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Rules from "./pages/Rules";
-import Profile from "./pages/Profile";
 import Callback from "./pages/Callback";
 import Register from "./pages/Register";
 import Championship from "./pages/Championship";
@@ -19,14 +18,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/rules" element={<Rules />}></Route>
-        <Route
-          path="/profile"
-          element={
-            <Protected key={"1"}>
-              <Profile />
-            </Protected>
-          }
-        ></Route>
         <Route path="/callback" element={<Callback />}></Route>
         <Route
           path="/register"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { todoApi } from "../api/todoApi";
 import { useAuth } from "../providers/auth";
 import { useNavigate } from "react-router-dom";
+import { useVisible } from "../providers/visible";
 import Timer from "../components/Timer";
 import { randomClassName } from "../hooks/randomClassName";
 
@@ -10,6 +11,7 @@ let keepMePlaying;
 const Game = () => {
   const { get, post, del } = todoApi();
   const { user } = useAuth();
+  const { setNavVisible } = useVisible();
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
@@ -93,6 +95,7 @@ const Game = () => {
   }, [round]);
   useEffect(() => {
     if (finished) {
+      setNavVisible(true);
       setShowPicks(false);
       setShowTimer(false);
       setPickSent(true);
@@ -102,6 +105,7 @@ const Game = () => {
   }, [finished]);
 
   useEffect(() => {
+    setNavVisible(false);
     const params = new URLSearchParams(window.location.search);
     const gameId = params.get("id");
     setId(gameId);
@@ -109,6 +113,7 @@ const Game = () => {
     getGameData = setInterval(() => fetch(gameId), 3000);
     keepMePlaying = setInterval(playing, 10000);
     return () => {
+      setNavVisible(true);
       clearInterval(getGameData);
       clearInterval(keepMePlaying);
     };
@@ -119,180 +124,184 @@ const Game = () => {
     <div className="game-page">
       <div className={randomClassName("background", "top", 2)}></div>
       <div className={randomClassName("background", "bottom", 2)}></div>
-      {!started ? (
-        <div>
-          <h2>Waiting for other player to join..</h2>
-          <button onClick={() => cancel(id)}>Cancel</button>
-        </div>
-      ) : (
-        gameStats && (
+      <div>
+        {!started ? (
           <div>
-            {finished && <h2>DONE!</h2>}
-            <div className="round">Round {gameStats.round}</div>
+            <h2>Waiting for other player to join..</h2>
+            <button onClick={() => cancel(id)}>Cancel</button>
+          </div>
+        ) : (
+          gameStats && (
             <div>
-              <div className="score-container">
-                <div>
-                  <h2>{gameStats[me].username}</h2>
-                  <h3>{gameStats[me].score}</h3>
-                </div>
-                <div className="game-message-board">
-                  <>
-                    {gameStats.round > 1 && showPicks && (
-                      <div>
-                        <p>
-                          My pick:{" "}
-                          {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
-                        </p>
-                        <p>
-                          Opponents pick:{" "}
-                          {
-                            gameStats.rounds[gameStats.round - 2][
-                              opponent + "Pick"
-                            ]
+              {finished && <h2>DONE!</h2>}
+              <div className="round">Round {gameStats.round}</div>
+              <div>
+                <div className="score-container">
+                  <div>
+                    <h2>{gameStats[me].username}</h2>
+                    <h3>{gameStats[me].score}</h3>
+                  </div>
+                  <div className="game-message-board">
+                    <>
+                      {gameStats.round > 1 && showPicks && (
+                        <div>
+                          <p>
+                            My pick:{" "}
+                            {gameStats.rounds[gameStats.round - 2][me + "Pick"]}
+                          </p>
+                          <p>
+                            Opponents pick:{" "}
+                            {
+                              gameStats.rounds[gameStats.round - 2][
+                                opponent + "Pick"
+                              ]
+                            }
+                          </p>
+                        </div>
+                      )}
+                      {finished && (
+                        <div
+                          className={
+                            gameStats.winner === gameStats[me].id
+                              ? randomClassName("decision", "winner", 2)
+                              : randomClassName("decision", "loser", 2)
                           }
-                        </p>
-                      </div>
+                        ></div>
+                      )}
+                      {pickSent && !finished && (
+                        <p>Waiting for the other player...</p>
+                      )}
+                    </>
+                  </div>
+                  <div>
+                    <h2>{gameStats[opponent].username}</h2>
+                    <h3>{gameStats[opponent].score}</h3>
+                  </div>
+                </div>
+                {showTimer && !finished && (
+                  <Timer gameId={gameStats._id} round={gameStats.round} />
+                )}
+              </div>
+              {showTimer && !finished && !pickSent && (
+                <div>
+                  <div>
+                    <p>Choice:</p>
+                    {gameStats.round > 1 && (
+                      <p>
+                        Avoid:{" "}
+                        {
+                          gameStats.rounds[gameStats.round - 2][
+                            opponent + "Future"
+                          ]
+                        }
+                      </p>
                     )}
-                    {finished && (
+                    <div className="pick-container">
                       <div
                         className={
-                          gameStats.winner === gameStats[me].id
-                            ? randomClassName("decision", "winner", 2)
-                            : randomClassName("decision", "loser", 2)
+                          pick === "rock" ? "pick-frame-selected" : "pick-frame"
                         }
-                      ></div>
-                    )}
-                    {pickSent && !finished && (
-                      <p>Waiting for the other player...</p>
-                    )}
-                  </>
+                      >
+                        <input
+                          type="button"
+                          name="pick"
+                          className="rock"
+                          onClick={() => setPick("rock")}
+                        />
+                      </div>
+                      <div
+                        className={
+                          pick === "paper"
+                            ? "pick-frame-selected"
+                            : "pick-frame"
+                        }
+                      >
+                        <input
+                          type="button"
+                          name="pick"
+                          className="paper"
+                          onClick={() => setPick("paper")}
+                        />
+                      </div>
+                      <div
+                        className={
+                          pick === "scissors"
+                            ? "pick-frame-selected"
+                            : "pick-frame"
+                        }
+                      >
+                        <input
+                          type="button"
+                          name="pick"
+                          className="scissors"
+                          onClick={() => setPick("scissors")}
+                        />
+                      </div>
+                    </div>
+                    <div></div>
+
+                    <p>Future:</p>
+                    <div className="pick-container">
+                      <div
+                        className={
+                          future === "rock"
+                            ? "future-frame-selected"
+                            : "future-frame"
+                        }
+                      >
+                        <input
+                          type="button"
+                          name="future"
+                          className="rock future"
+                          onClick={() => setFuture("rock")}
+                        />
+                      </div>
+                      <div
+                        className={
+                          future === "paper"
+                            ? "future-frame-selected"
+                            : "future-frame"
+                        }
+                      >
+                        <input
+                          type="button"
+                          name="future"
+                          className="paper future"
+                          onClick={() => setFuture("paper")}
+                        />
+                      </div>
+                      <div
+                        className={
+                          future === "scissors"
+                            ? "future-frame-selected"
+                            : "future-frame"
+                        }
+                      >
+                        <input
+                          type="button"
+                          name="future"
+                          className="scissors future"
+                          onClick={() => setFuture("scissors")}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    className="submit-button"
+                    disabled={pick === "none" || future === "none"}
+                    onClick={() => {
+                      sendChoice(id, pick, future);
+                      setPickSent(true);
+                    }}
+                  >
+                    Submit
+                  </button>
                 </div>
-                <div>
-                  <h2>{gameStats[opponent].username}</h2>
-                  <h3>{gameStats[opponent].score}</h3>
-                </div>
-              </div>
-              {showTimer && !finished && (
-                <Timer gameId={gameStats._id} round={gameStats.round} />
               )}
             </div>
-            {showTimer && !finished && !pickSent && (
-              <div>
-                <div>
-                  <p>Choice:</p>
-                  {gameStats.round > 1 && (
-                    <p>
-                      Avoid:{" "}
-                      {
-                        gameStats.rounds[gameStats.round - 2][
-                          opponent + "Future"
-                        ]
-                      }
-                    </p>
-                  )}
-                  <div className="pick-container">
-                    <div
-                      className={
-                        pick === "rock" ? "pick-frame-selected" : "pick-frame"
-                      }
-                    >
-                      <input
-                        type="button"
-                        name="pick"
-                        className="rock"
-                        onClick={() => setPick("rock")}
-                      />
-                    </div>
-                    <div
-                      className={
-                        pick === "paper" ? "pick-frame-selected" : "pick-frame"
-                      }
-                    >
-                      <input
-                        type="button"
-                        name="pick"
-                        className="paper"
-                        onClick={() => setPick("paper")}
-                      />
-                    </div>
-                    <div
-                      className={
-                        pick === "scissors"
-                          ? "pick-frame-selected"
-                          : "pick-frame"
-                      }
-                    >
-                      <input
-                        type="button"
-                        name="pick"
-                        className="scissors"
-                        onClick={() => setPick("scissors")}
-                      />
-                    </div>
-                  </div>
-                  <div></div>
-
-                  <p>Future:</p>
-                  <div className="pick-container">
-                    <div
-                      className={
-                        future === "rock"
-                          ? "future-frame-selected"
-                          : "future-frame"
-                      }
-                    >
-                      <input
-                        type="button"
-                        name="future"
-                        className="rock future"
-                        onClick={() => setFuture("rock")}
-                      />
-                    </div>
-                    <div
-                      className={
-                        future === "paper"
-                          ? "future-frame-selected"
-                          : "future-frame"
-                      }
-                    >
-                      <input
-                        type="button"
-                        name="future"
-                        className="paper future"
-                        onClick={() => setFuture("paper")}
-                      />
-                    </div>
-                    <div
-                      className={
-                        future === "scissors"
-                          ? "future-frame-selected"
-                          : "future-frame"
-                      }
-                    >
-                      <input
-                        type="button"
-                        name="future"
-                        className="scissors future"
-                        onClick={() => setFuture("scissors")}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <button
-                  className="submit-button"
-                  disabled={pick === "none" || future === "none"}
-                  onClick={() => {
-                    sendChoice(id, pick, future);
-                    setPickSent(true);
-                  }}
-                >
-                  Submit
-                </button>
-              </div>
-            )}
-          </div>
-        )
-      )}
+          )
+        )}
+      </div>
     </div>
   );
 };

@@ -1,9 +1,7 @@
 import React from "react";
-import { useAuth } from "../providers/auth";
 import { randomClassName } from "../hooks/randomClassName";
 
 const Home = () => {
-  const { auth } = useAuth();
   return (
     <div className="home-page">
       <div>

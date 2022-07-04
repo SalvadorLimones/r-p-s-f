@@ -2,7 +2,6 @@ const express = require("express");
 require("express-async-errors");
 const cors = require("cors");
 
-const { auth } = require("./middlewares/auth");
 const { errorHandler } = require("./middlewares/errorHandler");
 const gameRoutes = require("./routes/game");
 const userRoutes = require("./routes/user");
@@ -29,16 +28,6 @@ app.use("/api/friend", friendRoutes);
 app.get("/api/public", (req, res) => {
   console.log("public");
   res.send("Hello Public World ! ");
-});
-app.get("/api/private", auth({ block: true }), (req, res) => {
-  console.log("private");
-  res.send(`Hello Private world, your user id is: ${res.locals.user} !`);
-});
-app.get("/api/prublic", auth({ block: false }), (req, res) => {
-  console.log("private");
-  if (!res.locals.user)
-    return res.send("Hello Prublic World, you're not logged in ! ");
-  res.send(`Hello Prublic World, your user id is: ${res.locals.user} !`);
 });
 
 app.use(errorHandler);

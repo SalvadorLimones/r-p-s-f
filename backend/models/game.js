@@ -16,8 +16,6 @@ const roundSchema = new mongoose.Schema({
   playerTwoFuture: { type: String },
 });
 
-//startTime: { type: Date, required: true, default: Now },
-
 const gameSchema = new mongoose.Schema({
   playerOne: playerSchema,
   playerTwo: playerSchema,

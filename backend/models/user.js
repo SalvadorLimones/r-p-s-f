@@ -15,8 +15,6 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   providers: {
     google: { type: String, unique: true, sparse: true },
-    facebook: { type: String, unique: true, sparse: true },
-    github: { type: String, unique: true, sparse: true },
   },
   lastTimeOnline: { type: Date },
   online: { type: Boolean },
@@ -26,8 +24,6 @@ const userSchema = new mongoose.Schema({
   won: { type: Number, default: 0 },
   friends: [friendSchema],
   invited: { type: String },
-  playingStatus: Number, // 0 - he/she sent request; 1 - you've sent request; 2 - playing
-  playingId: String, //id of other player
   badges: [badgeSchema],
 });
 

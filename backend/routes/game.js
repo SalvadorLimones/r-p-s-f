@@ -134,7 +134,6 @@ router.post(
   auth({ block: true }),
   playing(),
   async (req, res) => {
-    console.log("USER:", res.locals.user);
     const game = await Game.create({
       playerOne: {
         id: res.locals.user.userId,
@@ -156,7 +155,6 @@ router.post(
 
 //join a game
 router.post("/join", auth({ block: true }), playing(), async (req, res) => {
-  console.log("USER: ", res.locals.user);
   const id = req.body.gameId;
   let game;
   if (!id) {
@@ -196,7 +194,6 @@ router.post("/join", auth({ block: true }), playing(), async (req, res) => {
 router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
   let me;
   const { round, Pick, Future } = req.body;
-  console.log("ROUND: ", round, "PICK: ", Pick, "FUTURE: ", Future);
   if (!(round && Pick && Future))
     return res.status(400).send("All inputs required!");
   const game = await Game.findById(req.params.gameId);
