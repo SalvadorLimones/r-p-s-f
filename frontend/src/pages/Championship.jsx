@@ -25,7 +25,6 @@ const Championship = () => {
   };
 
   const renderUser = (user, i) => {
-    console.log(user);
     return (
       <tr key={i} className={user.username === me.username ? "selected" : ""}>
         <td>{i + 1}</td>

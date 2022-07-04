@@ -122,7 +122,7 @@ router.post("/join", auth({ block: true }), playing(), async (req, res) => {
     game = await Game.findById(id);
   }
 
-  if (game.playerTwo.id !== res.locals.user.userId)
+  if (game.playerTwo?.id !== res.locals.user.userId)
     return res
       .status(401)
       .send("Sorry, you were not invited to join this game!");
@@ -146,7 +146,7 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
     return res.status(400).send("All inputs required!");
   const game = await Game.findById(req.params.gameId);
 
-  if (!game) return res.status(404).send("game not found!");
+  if (!game) return res.status(404).send("Game not found!");
 
   if (
     game.playerOne?.id !== res.locals.user.userId &&

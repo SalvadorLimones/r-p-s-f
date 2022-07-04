@@ -70,7 +70,6 @@ const Game = () => {
   };
 
   const sendChoice = async (gameId, pick, future) => {
-    console.log("PICK: ", pick, "FUTURE: ", future);
     const resp = await post("/game/pick/" + gameId, {
       round: gameStats.round,
       Pick: pick,
