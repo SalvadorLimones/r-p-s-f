@@ -4,6 +4,7 @@ const mockserver = require("supertest");
 const User = require("../models/user");
 const { startDb, stopDb, deleteAll } = require("./util/inMemoryDb");
 const jwt = require("jsonwebtoken");
+const { storeOnePlayer, storeTwoPlayers } = require("./util/storePlayers");
 
 describe("/api/user/friend test", () => {
   let connection;
@@ -27,19 +28,12 @@ describe("/api/user/friend test", () => {
 
   test("a POST request to /add with no data in the request body returns error status 400", async () => {
     //given
-    const newUser = new User({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await newUser.save();
+    await storeOnePlayer();
+    const me = await User.findOne({ username: "Macska" });
 
-    const sessionToken = jwt.sign(
-      { userId: newUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const sessionToken = jwt.sign({ userId: me._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
     client.set("authorization", sessionToken);
 
     //when
@@ -52,13 +46,7 @@ describe("/api/user/friend test", () => {
 
   test("a POST request to /add with incorrect userId in authorization token returns error status 400", async () => {
     //given
-    const newUser = new User({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await newUser.save();
+    await storeOnePlayer();
 
     const sessionToken = jwt.sign({ userId: "11111" }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -77,18 +65,7 @@ describe("/api/user/friend test", () => {
 
   test("a POST request to /add with correct authorization token but incorrect userId in the request body returns error status 400", async () => {
     //given
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 
@@ -115,18 +92,7 @@ describe("/api/user/friend test", () => {
   test("a POST request to /add with correct authorization token and userId in the request body but friend request already sent returns error status 400", async () => {
     //given
 
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 
@@ -168,18 +134,7 @@ describe("/api/user/friend test", () => {
   test("a POST request to /add with correct authorization token and userId in the request body and the two users not being friends prior the request, returns status 200 and adds users to the friends array with status:1 for requester and status:0 for requested", async () => {
     //given
 
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 
@@ -212,18 +167,7 @@ describe("/api/user/friend test", () => {
   test("a POST request to /add with correct authorization token and userId in the request body and the the requester now accepting the other player's friend request, returns status 200 and changes the friend status to 2 for both requester and requested", async () => {
     //given
 
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 
@@ -270,19 +214,12 @@ describe("/api/user/friend test", () => {
 
   test("a POST request to /remove with no data in the request body returns error status 400", async () => {
     //given
-    const newUser = new User({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await newUser.save();
+    await storeOnePlayer();
+    const me = await User.findOne({ username: "Macska" });
 
-    const sessionToken = jwt.sign(
-      { userId: newUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const sessionToken = jwt.sign({ userId: me._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
     client.set("authorization", sessionToken);
 
     //when
@@ -296,18 +233,7 @@ describe("/api/user/friend test", () => {
   test("a POST request to /remove with correct authorization token and userId in the request body but other player's friend status requesters list is 0  returns error status 400", async () => {
     //given
 
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 
@@ -349,18 +275,7 @@ describe("/api/user/friend test", () => {
   test("a POST request to /remove with correct authorization token and userId in the request body and the the requester and requested being friends (status: 2 and 2), returns status 200 and changes the friend status to 0 for requester and 1 for requested", async () => {
     //given
 
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 
@@ -406,18 +321,7 @@ describe("/api/user/friend test", () => {
   test("a POST request to /remove with correct authorization token and userId in the request body and the the requester already sent a request which hasn't yet been accepted (status: 1 and 0), returns status 200 and revokes the friend request, removes both from eachother's friend list", async () => {
     //given
 
-    await User.create({
-      username: "Macska",
-      providers: {
-        google: 123456,
-      },
-    });
-    await User.create({
-      username: "Kutya",
-      providers: {
-        google: 111111,
-      },
-    });
+    await storeTwoPlayers();
     const me = await User.findOne({ username: "Macska" });
     const otherPlayer = await User.findOne({ username: "Kutya" });
 

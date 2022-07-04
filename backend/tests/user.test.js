@@ -114,7 +114,6 @@ describe("/api/user/login test", () => {
 
     //then
     expect(response.status).toBe(401);
-    expect(response.body).toStrictEqual({});
   });
 
   test("a POST request to /create with no username in the request body returns error status 400", async () => {
@@ -162,7 +161,7 @@ describe("/api/user/login test", () => {
     expect(response.status).toBe(200);
   });
 
-  test("a POST request to /loggedin with username in the request body returns status 200 and changes user's online status to true", async () => {
+  test("a POST request to /loggedin with username in the request body returns status 200 and updates the lastTimeOnline value", async () => {
     //given
 
     await User.create({
@@ -190,8 +189,43 @@ describe("/api/user/login test", () => {
 
     //then
     expect(response.status).toBe(200);
-    expect(me.online).toBe(false);
-    expect(meAgain.online).toBe(true);
-    expect(response.text).toBe("running...");
+    expect(response.text).toBe("online...");
+    expect(meAgain.lastTimeOnline).toBeInstanceOf(Date);
+    expect(me.lastTimeOnline === meAgain.lastTimeOnline).toBe(false);
+  });
+
+  test("a POST request to /loggedin with username and playing: true in the request body returns status 200 and updates the lastTimePlayed value", async () => {
+    //given
+
+    await User.create({
+      username: "Macska",
+      providers: {
+        google: 123456,
+      },
+    });
+
+    const me = await User.findOne({ username: "Macska" });
+
+    const sessionToken = jwt.sign(
+      { userId: me._id, providers: me.providers },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    client.set("authorization", sessionToken);
+    const response = await client.post("/api/user/loggedin").send({
+      playing: true,
+    });
+
+    //when
+    const meAgain = await User.findOne({ username: "Macska" });
+
+    //then
+    expect(response.status).toBe(200);
+    expect(response.text).toBe("online...");
+    expect(meAgain.lastTimePlayed).toBeInstanceOf(Date);
+    expect(me.lastTimePlayed === meAgain.lastTimePlayed).toBe(false);
   });
 });

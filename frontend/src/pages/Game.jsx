@@ -27,7 +27,6 @@ const Game = () => {
   const navigate = useNavigate();
 
   const playing = async () => {
-    console.log("playing!");
     const resp = await post("/user/loggedin", { playing: true });
     if (resp.status !== 200) {
       clearInterval(keepMePlaying);
