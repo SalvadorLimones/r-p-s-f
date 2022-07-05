@@ -1,13 +1,12 @@
 # ROCK PAPER SCISSORS FUTURE APP
 
 -This repository contains the front and backend code for an app i originally created as an exam project at Codecool.The game is built on the well-known „rock, paper, scissors” game, with a little twist: compared to the classical version of the game the player will find an extra feature. In every round, s/he has to pick one of the tools for the other player that s/he has to avoid in the next round. If the other player – despite the „avoid” sign – chooses that item, the first player earns half a point in that round.
+
 -The gameplay is accessable after the user registers and logs in, and the user can choose either to play championship games with a randomly assigned other player who is online as well or to play a friendly game with any of the players on his/her firend-list.
 
--
+-The app utilizes the Google OpenID flow for user authentication, and relies on a MongoDB server for storing user data, as well as information about the games.
 
-The app utilizes the Google OpenID flow for user authentication, and relies on a MongoDB server for storing user data, as well as information about the games.
-
-[The application is online and playable on:](https://starfish-app-2-wy545.ondigitalocean.app/).
+[The application is online and playable!](https://starfish-app-2-wy545.ondigitalocean.app/).
 
 ## Frontend
 
