@@ -12,8 +12,8 @@ The app utilizes the Google OpenID flow for user authentication, and relies on a
 
 The frontend is a simple React app. It can be started up on the localhost by installing the dependencies, then calling the run command. To put it more simply, all you need to get the frontend running locally on your computer is:
 
--npm i
--npm start
+- npm i
+- npm start
 
 ### Environment variables:
 
