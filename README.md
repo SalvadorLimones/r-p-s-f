@@ -1,25 +1,25 @@
 # ROCK PAPER SCISSORS FUTURE APP
 
--This repository contains the front and backend code for an app i originally created as an exam project at Codecool.The game is built on the well-known „rock, paper, scissors” game, with a little twist: compared to the classical version of the game the player will find an extra feature. In every round, s/he has to pick one of the tools for the other player that s/he has to avoid in the next round. If the other player – despite the „avoid” sign – chooses that item, the first player earns half a point in that round.
+This repository contains the front and backend code for an app i originally created as an exam project at Codecool.The game is built on the well-known „rock, paper, scissors” game, with a little twist: compared to the classical version of the game the player will find an extra feature. In every round, s/he has to pick one of the tools for the other player that s/he has to avoid in the next round. If the other player – despite the „avoid” sign – chooses that item, the first player earns half a point in that round.
 
--The gameplay is accessable after the user registers and logs in, and the user can choose either to play championship games with a randomly assigned other player who is online as well or to play a friendly game with any of the players on his/her firend-list.
+The gameplay is accessable after the user registers and logs in, and the user can choose either to play championship games with a randomly assigned other player who is online as well or to play a friendly game with any of the players on his/her firend-list.
 
--The app utilizes the Google OpenID flow for user authentication, and relies on a MongoDB server for storing user data, as well as information about the games.
+The app utilizes the Google OpenID flow for user authentication, and relies on a MongoDB server for storing user data, as well as information about the games.
 
-[The application is online and playable!](https://starfish-app-2-wy545.ondigitalocean.app/).
+[The application is online and playable!](https://starfish-app-2-wy545.ondigitalocean.app/)
 
 ## Frontend
 
 The frontend is a simple React app. It can be started up on the localhost by installing the dependencies, then calling the run command. To put it more simply, all you need to get the frontend running locally on your computer is:
 
-- npm i
-- npm start
+-npm i
+-npm start
 
-### Environment variables
+### Environment variables:
 
--REACT_APP_API_URL={url-of-backend + "/api"}
--REACT_APP_GOOGLE_BASE_URL=https://accounts.google.com/o/oauth2/v2/auth
--REACT_APP_CLIENT_ID={client-id}
+- REACT_APP_API_URL={url-of-backend + "/api"}
+- REACT_APP_GOOGLE_BASE_URL=https://accounts.google.com/o/oauth2/v2/auth
+- REACT_APP_CLIENT_ID={client-id}
 
 ## Backend
 
