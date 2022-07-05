@@ -9,22 +9,24 @@
 
 Create a .env file in the root folder, with the below variables:
 
-PORT=4000
-APP_URL=http://localhost:3000/
-CONNECTION_STRING = mongodb://localhost:27017/fullstack-app-template
-JWT_SECRET=jwtsecret
+- PORT={port}
+- APP_URL={url-of-frontend}
+- CONNECTION_STRING={mongo-connection-string}
+- JWT_SECRET={secret}
 
-CLIENT_ID=423125049963-vnhlm59vvirdjsquu0efhqvq5u91orks.apps.googleusercontent.com
-CLIENT_SECRET=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
-REDIRECT_URI=http://localhost:3000/callback
-TOKEN_ENDPOINT=https://oauth2.googleapis.com/token
-SCOPE=openid
+The following values are needed in order for Google authentication to work:
 
-GIT_CLIENT_ID=ec24a971e0b051cb18f4
-GIT_CLIENT_SECRET=baa74a186ad69427cb6e01d5bdc2e1a2ba901e92
-GIT_REDIRECT_URI=http://localhost:3000/callback/github
-GIT_TOKEN_ENDPOINT=https://github.com/login/oauth/access_token
-GIT_SCOPE=user
+- GOOGLE_CLIENT_ID={client-id}
+- GOOGLE_CLIENT_SECRET={client-secret}
+- GOOGLE_REDIRECT_URI={url-of-frontend}/callback/google
+- GOOGLE_TOKEN_ENDPOINT=https://oauth2.googleapis.com/token
+- GOOGLE_USER_ENDPOINT=null
+- GOOGLE_USER_ID=null
+
+To utilize the errorHandler middleware, Logflare needs to be configured properly with the following values:
+
+- LOGFLARE_SOURCE_ID={source-id}
+- LOGFLARE_API_KEY={api-key}
 
 ## dev start:
 
