@@ -303,6 +303,11 @@ div[class^="decision"] {
     background-image: url("../public/images/background-mobile.png");
     padding-top: 30px;
   }
+
+  .logo {
+    max-width: 90vw;
+    max-height: 90vw;
+  }
   div[class^="background"] {
     max-width: 30vw;
     max-height: 30vw;
@@ -345,10 +350,12 @@ div[class^="decision"] {
     height: 70vh;
   }
   .table-page {
-    height: 65vh;
-    margin-top: calc(150px - 15vh);
+    height: 60vh;
+    margin-top: calc(130px - 13vh);
   }
-  .table {
+
+  .table-page .table {
+    width: 70%;
     font-size: 3.3vw;
   }
   .score-container {
@@ -356,5 +363,12 @@ div[class^="decision"] {
   }
   .game-message-board {
     width: 50vw;
+  }
+}
+
+@media only screen and (orientation: landscape) and (max-width: 850px) {
+  div[class^="background"] {
+    max-width: 15vw;
+    max-height: 15vw;
   }
 }
