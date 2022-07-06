@@ -74,34 +74,36 @@ const Playground = () => {
   }, []);
 
   return (
-    <div className="table-page">
-      <table>
-        <thead>
-          <tr>
-            <th>Online</th>
-            <th>Playing</th>
-            <th>Name</th>
-            <th>Played against</th>
-            <th>Won</th>
-            <th>Lost</th>
-            <th>Invite to play</th>
-            <th>Accept, start game</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users && (
-            <>
-              {users
-                .filter((user) => user.invited)
-                .map((user, i) => usersData(user, i))}
+    <div className="table-page-parent">
+      <div className="table-page">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Online</th>
+              <th>Playing</th>
+              <th>Name</th>
+              <th>Played against</th>
+              <th>Won</th>
+              <th>Lost</th>
+              <th>Invite to play</th>
+              <th>Accept, start game</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users && (
+              <>
+                {users
+                  .filter((user) => user.invited)
+                  .map((user, i) => usersData(user, i))}
 
-              {users
-                .filter((user) => !user.invited)
-                .map((user, i) => usersData(user, i))}
-            </>
-          )}
-        </tbody>
-      </table>
+                {users
+                  .filter((user) => !user.invited)
+                  .map((user, i) => usersData(user, i))}
+              </>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

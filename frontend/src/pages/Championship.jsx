@@ -42,25 +42,31 @@ const Championship = () => {
   }, []);
 
   return (
-    <div className="table-page">
+    <div>
       <div className={randomClassName("background", "top", 2)}></div>
       <div className={randomClassName("background", "bottom", 2)}></div>
       <h3>Leaderboard</h3>
       <button className="play-button" onClick={() => joinOrCreate()}>
         Ready to Play!
       </button>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Played</th>
-            <th>Won</th>
-            <th>Win%</th>
-          </tr>
-        </thead>
-        <tbody> {users && users.map((user, i) => renderUser(user, i))} </tbody>
-      </table>
+      <div className="table-page-parent">
+        <div className="table-page">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Played</th>
+                <th>Won</th>
+                <th>Win%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users && users.map((user, i) => renderUser(user, i))}{" "}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

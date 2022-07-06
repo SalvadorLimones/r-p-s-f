@@ -19,11 +19,19 @@ p {
   margin: 0;
 }
 
-.rules-page-parent {
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding: 10px 100px;
+}
+
+.rules-page-parent,
+.table-page-parent {
   overflow: hidden;
 }
 
-.rules-page {
+.rules-page,
+.table-page {
   width: 105%;
   height: 80vh;
   position: fixed;
@@ -32,13 +40,23 @@ p {
   transform: translate(-50%, -50%);
   padding: 5px;
   overflow: auto;
+}
+
+.table-page {
+  height: 70vh;
+  margin-top: 80px;
+  font-size: 20px;
+}
+
+.rules-page {
   letter-spacing: 0.2rem;
   font-size: 22px;
   font-weight: bold;
 }
 
-.rules-page div {
-  width: 75%;
+.rules-page div,
+.table-page .table {
+  width: 70%;
   position: fixed;
   left: 50%;
   transform: translatex(-50%);
@@ -50,18 +68,8 @@ p {
   color: #dd4f13;
 }
 
-.table-page {
+.table-page .table {
   width: 60%;
-  padding: 0 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 20px;
-}
-
-.table-page table {
-  margin-top: 30px;
-  width: 100%;
 }
 
 button {
@@ -101,7 +109,7 @@ nav button,
 
 div[class^="background"] {
   width: 250px;
-  height: 200px;
+  height: 250px;
   position: fixed;
   background-size: contain;
   background-repeat: no-repeat;
@@ -133,7 +141,7 @@ div[class$="bottom-2"] {
   width: 350px;
   height: 350px;
   position: fixed;
-  top: 50%;
+  top: calc(50% - 25px);
   left: 50%;
   transform: translate(-50%, -50%);
   background-image: url("../public/images/logo.png");
@@ -142,7 +150,7 @@ div[class$="bottom-2"] {
 }
 .please-log-in {
   position: absolute;
-  bottom: -40px;
+  bottom: -15px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;
@@ -273,4 +281,15 @@ div[class^="decision"] {
 }
 .decision-loser-2 {
   background-image: url("../public/images/loser-2.jpg");
+}
+
+@media only screen and (max-width: 1050px) {
+  div[class^="background"] {
+    width: 200px;
+    height: 200px;
+  }
+  nav button,
+  .friends-button {
+    margin: 0 15px;
+  }
 }

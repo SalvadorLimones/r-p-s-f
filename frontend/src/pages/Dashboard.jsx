@@ -66,22 +66,24 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="table-page">
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Played</th>
-            <th>Won</th>
-            <th>Win%</th>
-            <th>+</th>
-            <th>-</th>
-            <th>Friend Status</th>
-          </tr>
-        </thead>
-        <tbody>{users && users.map((user, i) => usersData(user, i))}</tbody>
-      </table>
+    <div className="table-page-parent">
+      <div className="table-page">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Played</th>
+              <th>Won</th>
+              <th>Win%</th>
+              <th>+</th>
+              <th>-</th>
+              <th>Friend Status</th>
+            </tr>
+          </thead>
+          <tbody>{users && users.map((user, i) => usersData(user, i))}</tbody>
+        </table>
+      </div>
     </div>
   );
 };

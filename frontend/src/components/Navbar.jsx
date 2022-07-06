@@ -13,13 +13,7 @@ const Navbar = () => {
 
   return (
     navVisible && (
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: " 10px 200px",
-        }}
-      >
+      <nav className="navbar">
         <div>
           {!token && (
             <button
