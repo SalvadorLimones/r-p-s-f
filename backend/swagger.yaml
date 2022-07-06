@@ -1,0 +1,502 @@
+swagger: "2.0"
+info:
+  description: "This is the documentation for the Rock Paper Scissors Furure app"
+  version: "1.0.0"
+  title: "Rock Paper Scissors Future"
+
+basePath: "/v2"
+tags:
+- name: "user"
+  description: "User related endpoints"
+- name: "friend"
+  description: "Friend-unfirend endpoints"
+- name: "game"
+  description: "Everything game related"
+schemes:
+- "https"
+- "http"
+paths:
+  /user/login:
+    post:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "payload object"
+        required: true
+        schema:
+          items:
+            $ref: "#/definitions/Payload"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SessionToken"
+        "400":
+          description: "no, incomplete or wrong payload"
+        "500":
+          description: "no response from google api / jwt not decoded"
+        "401":
+          description: "response status from google api other than 200"  
+          
+  /user/create:
+    post:
+      tags:
+      - "user"
+      summary: "Adds a new user to database"
+      description: ""
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Username"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/UserName"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SessionToken"
+        "400":
+          description: "username missing from req body"
+        "401":
+          description: "username already taken"
+      security:
+      - api_auth:
+        - "write:token"
+        
+  /user/loggedin:
+    post:
+      tags:
+      - "user"
+      summary: "Keeps user logged in or playing "
+      description: ""
+      operationId: "keepUserLoggedIn"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "playing"
+        in: "body"
+        description: "request for update lastTimePlayed field in User model"
+        required: false
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/Playing"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "user not found"
+      security:
+      - api_auth:
+        - "write:token"   
+        
+  /user/users:
+    get:
+      tags:
+      - "user"
+      summary: "Gets list of all users"
+      description: ""
+      operationId: "getUsers"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+      security:
+      - api_auth:
+        - "write:token"   
+        
+  /user/friends:
+    get:
+      tags:
+      - "user"
+      summary: "Gets friends list"
+      description: ""
+      operationId: "getFriendsOfUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/FriendList"
+      security:
+      - api_auth:
+        - "write:token" 
+        
+  /friend/add:
+    post:
+      tags:
+      - "friend"
+      summary: "Sends friend request or accepts other user's request"
+      description: ""
+      operationId: "addToFriendList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "UserId"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/UserId"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "UserId missing or incorrect, userId in req body is the same as the logged-in user's id, the two users are already friends"
+      security:
+      - api_auth:
+        - "write:token" 
+        
+  /friend/remove:
+    post:
+      tags:
+      - "friend"
+      summary: "The opposite of /friend/add"
+      description: ""
+      operationId: "removeFromFriendList"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "UserId"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/UserId"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "UserId missing or incorrect, userId in req body is the same as the logged-in user's id, the two users are not friends"
+      security:
+      - api_auth:
+        - "write:token"  
+        
+  /game/{gameId}:
+    get:
+      tags:
+      - "game"
+      summary: "Returns game data of a given game"
+      description: ""
+      operationId: "getGameData"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: gameId
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GameData"
+        "404":
+          description: "Game not found"
+      security:
+      - api_auth:
+        - "write:token"   
+    delete:
+      tags:
+      - "game"
+      summary: "Deletes a given game"
+      description: ""
+      operationId: "deleteGame"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: gameId
+        type: "string"
+        required: true      
+      responses:
+        "200":
+          description: "successful operation"
+        "404":
+          description: "Game not found"
+        "401":
+          description: "User is not authorized to delete the game, game already started"
+      security:
+      - api_auth:
+        - "write:token" 
+        
+  /game/start/friendly:
+    post:
+      tags:
+      - "game"
+      summary: "Starts a friendly game"
+      description: ""
+      operationId: "startFriendlyGame"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+        "401":
+          description: "User already playing"
+        "400":
+          description: "User trying to start a friendly game with a user who is not his/her friend; the other player is offline; the other player is already playing"
+      security:
+      - api_auth:
+        - "write:token" 
+        
+  /game/start/championship:
+    post:
+      tags:
+      - "game"
+      summary: "Creates a championship game"
+      description: ""
+      operationId: "startChampionshipGame"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+        "401":
+          description: "User already playing"
+      security:
+      - api_auth:
+        - "write:token"
+        
+  /game/join:
+    post:
+      tags:
+      - "game"
+      summary: "Joins a game"
+      description: ""
+      operationId: "joinGame"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "gameId"
+        required: false
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/GameId"      
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Game started; game finished"
+        "401":
+          description: "User already playing; not invited to join the given friendly game"
+        "404":
+          description: "Game not found"
+      security:
+      - api_auth:
+        - "write:token"  
+        
+  /game/pick/{gameId}:
+    post:
+      tags:
+      - "game"
+      summary: "Stores user's choices during the game"
+      description: ""
+      operationId: "sendPicks"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: gameId
+        type: "string"
+        required: true      
+      - in: "body"
+        name: "body"
+        description: "gameId"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/GamePick"      
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GameData"
+        "400":
+          description: "Game started; game finished; request body is incolmplete; user's choices already sent for this round"
+        "401":
+          description: "User already playing; user not participating in the game with the given id"
+        "404":
+          description: "Game not found"
+      security:
+      - api_auth:
+        - "write:token"           
+  
+securityDefinitions:
+  api_auth:
+    type: "oauth2"
+    scopes:
+      write:token: "send token"
+    flow: "application"
+    tokenUrl: "https://bla.app/"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Payload:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      provider:
+        type: "string"
+    xml:
+      name: "Payload"
+      
+  SessionToken:
+    type: "object"
+    properties:
+      sessionToken:
+        type: "string"
+        
+  UserName:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        
+  UserId:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+        
+  GameId:
+    type: "object"
+    properties:
+      gameId:
+        type: "string"
+        
+  GamePick:
+    type: "object"
+    properties:
+      round:
+        type: "string"
+      Pick:
+        type: "string"
+      Future:
+        type: "string"
+        
+  Playing:
+    type: "object"
+    properties:
+      playing:
+        type: "boolean"
+        
+  User:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      provider:
+        type: "string"
+      lastTimeOnline:
+        type: "string"
+        format: "date-time"
+      lastTimePlayed:
+        type: "string"
+        format: "date-time"
+      friends:
+        type: "array"
+        items:
+          $ref: "#/definitions/Friends"
+          
+  Friends:
+    type: "object"
+    properties:
+      FriendId:
+        type: "string"          
+      FriendUsername:
+        type: "string"          
+      FriendStatus:
+        type: "number"
+  FriendList:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+          
+  GameData:
+    type: "object"
+    properties:
+      playerOne:
+        $ref: "#/definitions/Player"  
+      playerTwo:
+        $ref: "#/definitions/Player"  
+      round:
+        type: "number"
+      rounds:
+        type: "array"
+        items:
+          $ref: "#/definitions/Round"
+      created:
+        type: "string"
+        format: "date-time"          
+      started:
+        type: "string"
+        format: "date-time"          
+      finished:
+        type: "string"
+        format: "date-time"          
+      winner:
+        type: "string"
+  
+  Player:
+    type: "object"
+    properties:
+      id:
+        type: "string"          
+      username:
+        type: "string"          
+      score:
+        type: "number"
+  Round:
+    type: "object"
+    properties:
+      roundNo:
+        type: "number"          
+      started:
+        type: "string"
+        format: "date-time"         
+      finished:
+        type: "string"
+        format: "date-time"         
+      playerOnePick:
+        type: "string"
+      playerTwoPick:
+        type: "string"
+      playerOneFuture:
+        type: "string"
+      playerTwoFuture:
+        type: "string"
+
+externalDocs:
+  description: "Try out the app!"
+  url: "https://starfish-app-2-wy545.ondigitalocean.app/"

@@ -87,7 +87,7 @@ router.post("/create", auth({ block: true }), async (req, res) => {
   res.json({ sessionToken });
 });
 
-//keep user logged in, log it out after 1 min, if no request received
+//keeps user logged in or playing by updating the lastTImeOnline fields or lastTimePlayed fields
 router.post("/loggedin", auth({ block: true }), async (req, res) => {
   const user = await User.findById(res.locals.user.userId);
   if (!user) return res.status(400).send("User not found!");
