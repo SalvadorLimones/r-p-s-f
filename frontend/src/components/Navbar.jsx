@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/auth";
 import { useVisible } from "../providers/visible";
@@ -6,11 +6,11 @@ import { useVisible } from "../providers/visible";
 const Navbar = () => {
   const navigate = useNavigate();
   const { auth, token, logout } = useAuth();
-  const [selected, setSelected] = useState("home");
-  const { navVisible } = useVisible();
+  const { navVisible, selected, setSelected } = useVisible();
   const nav = (path) => {
     navigate(path);
   };
+
   return (
     navVisible && (
       <nav
@@ -64,7 +64,15 @@ const Navbar = () => {
             </>
           )}
           {token ? (
-            <button onClick={logout}>Logout</button>
+            <button
+              onClick={() => {
+                logout();
+                setSelected("home");
+                navigate("/");
+              }}
+            >
+              Logout
+            </button>
           ) : (
             <button onClick={auth}>Login</button>
           )}

@@ -11,7 +11,7 @@ let keepMePlaying;
 const Game = () => {
   const { get, post, del } = todoApi();
   const { user } = useAuth();
-  const { setNavVisible } = useVisible();
+  const { setNavVisible, selected } = useVisible();
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
@@ -48,7 +48,7 @@ const Game = () => {
     console.log("GAMEDATA: ", resp.data);
     if (resp.status !== 200) {
       clearInterval(getGameData);
-      navigate("/friends");
+      navigate("/" + selected);
     }
     if (resp.data.started) setStarted(true);
     if (resp.data.round === 1) {
@@ -59,7 +59,6 @@ const Game = () => {
 
     if (resp.data.finished) {
       setFinished(true);
-      clearInterval(getGameData);
     }
     setGameStats(resp.data);
   };
@@ -93,7 +92,11 @@ const Game = () => {
   }, [round]);
   useEffect(() => {
     if (finished) {
-      setNavVisible(true);
+      clearInterval(getGameData);
+      setTimeout(() => {
+        navigate("/" + selected);
+        setNavVisible(true);
+      }, 3500);
       setShowPicks(false);
       setShowTimer(false);
       setPickSent(true);

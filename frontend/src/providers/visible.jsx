@@ -4,7 +4,8 @@ const VisibleContext = createContext();
 
 const VisibleProvider = ({ children }) => {
   const [navVisible, setNavVisible] = useState(true);
-  const contextValue = { navVisible, setNavVisible };
+  const [selected, setSelected] = useState("home");
+  const contextValue = { navVisible, setNavVisible, selected, setSelected };
 
   return (
     <div>
