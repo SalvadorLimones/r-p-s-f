@@ -44,7 +44,7 @@ p {
 
 .table-page {
   height: 70vh;
-  margin-top: 80px;
+  margin-top: calc(200px - 15vh);
   font-size: 20px;
 }
 
@@ -62,14 +62,14 @@ p {
   transform: translatex(-50%);
 }
 
+.table-page .table {
+  width: 60%;
+}
+
 .rules-page h2,
 .rules-page h3,
 .rules-page h4 {
   color: #dd4f13;
-}
-
-.table-page .table {
-  width: 60%;
 }
 
 button {
@@ -283,6 +283,10 @@ div[class^="decision"] {
   background-image: url("../public/images/loser-2.jpg");
 }
 
+.hamburger-menu {
+  display: none;
+}
+
 @media only screen and (max-width: 1050px) {
   div[class^="background"] {
     width: 200px;
@@ -291,5 +295,66 @@ div[class^="decision"] {
   nav button,
   .friends-button {
     margin: 0 15px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  body {
+    background-image: url("../public/images/background-mobile.png");
+    padding-top: 30px;
+  }
+  div[class^="background"] {
+    max-width: 30vw;
+    max-height: 30vw;
+  }
+  .hamburger-menu {
+    width: 40px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-image: url("../public/images/hamburger-menu.png");
+    background-size: 100% 100%;
+  }
+  .navbar-hidden {
+    display: none;
+  }
+  .navbar {
+    width: auto;
+    height: auto;
+    position: fixed;
+    top: 15px;
+    left: 70px;
+    z-index: 10;
+    padding: 0;
+    background-image: url("../public/images/popupwindow.png");
+    background-size: 100% 100%;
+  }
+  .navbar div {
+    padding: 20px 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .navbar button {
+    text-align: left;
+  }
+  .rules-page {
+    font-size: 18px;
+    height: 70vh;
+  }
+  .table-page {
+    height: 65vh;
+    margin-top: calc(150px - 15vh);
+  }
+  .table {
+    font-size: 3.3vw;
+  }
+  .score-container {
+    padding: 0 20px;
+  }
+  .game-message-board {
+    width: 50vw;
   }
 }

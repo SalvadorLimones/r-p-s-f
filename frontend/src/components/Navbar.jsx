@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/auth";
 import { useVisible } from "../providers/visible";
@@ -7,71 +7,78 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { auth, token, logout } = useAuth();
   const { navVisible, selected, setSelected } = useVisible();
+  const [hidden, setHidden] = useState(true);
   const nav = (path) => {
     navigate(path);
   };
 
   return (
     navVisible && (
-      <nav className="navbar">
-        <div>
-          {!token && (
-            <button
-              className={selected === "home" && "selected"}
-              onClick={() => {
-                setSelected("home");
-                nav("/");
-              }}
-            >
-              Home
-            </button>
-          )}
-          <button
-            className={selected === "rules" && "selected"}
-            onClick={() => {
-              nav("/rules");
-              setSelected("rules");
-            }}
-          >
-            Rules
-          </button>
-          {token && (
-            <>
+      <>
+        <div
+          className="hamburger-menu"
+          onClick={() => setHidden(!hidden)}
+        ></div>
+        <nav className={!hidden ? "navbar" : "navbar-hidden"}>
+          <div>
+            {!token && (
               <button
-                className={selected === "championship" && "selected"}
+                className={selected === "home" && "selected"}
                 onClick={() => {
-                  setSelected("championship");
-                  navigate("/championship");
+                  setSelected("home");
+                  nav("/");
                 }}
               >
-                Championship
+                Home
               </button>
-              <button
-                className={selected === "friends" && "selected"}
-                onClick={() => {
-                  setSelected("friends");
-                  navigate("/friends");
-                }}
-              >
-                Friends
-              </button>
-            </>
-          )}
-          {token ? (
+            )}
             <button
+              className={selected === "rules" && "selected"}
               onClick={() => {
-                logout();
-                setSelected("home");
-                navigate("/");
+                nav("/rules");
+                setSelected("rules");
               }}
             >
-              Logout
+              Rules
             </button>
-          ) : (
-            <button onClick={auth}>Login</button>
-          )}
-        </div>
-      </nav>
+            {token && (
+              <>
+                <button
+                  className={selected === "championship" && "selected"}
+                  onClick={() => {
+                    setSelected("championship");
+                    navigate("/championship");
+                  }}
+                >
+                  Championship
+                </button>
+                <button
+                  className={selected === "friends" && "selected"}
+                  onClick={() => {
+                    setSelected("friends");
+                    navigate("/friends");
+                  }}
+                >
+                  Friends
+                </button>
+              </>
+            )}
+            {token ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setSelected("home");
+                  navigate("/");
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <button onClick={auth}>Login</button>
+            )}
+          </div>
+        </nav>
+      </>
     )
   );
 };
