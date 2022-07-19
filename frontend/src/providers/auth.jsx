@@ -9,6 +9,7 @@ let keepMeLoggedin;
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
+  const [taken, setTaken] = useState(null);
   const { post } = todoApi();
 
   const auth = () => {
@@ -67,9 +68,22 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("token", resp.data.sessionToken);
       setUser(jwt(resp.data.sessionToken));
     }
+    if (resp?.status === 401) {
+      setTaken(resp.data);
+      console.log(taken);
+    }
   };
 
-  const contextValue = { user, token, auth, login, logout, register };
+  const contextValue = {
+    user,
+    token,
+    auth,
+    login,
+    logout,
+    register,
+    taken,
+    setTaken,
+  };
 
   useEffect(() => {
     const tokenInStorage = localStorage.getItem("token");
@@ -91,6 +105,10 @@ const AuthProvider = ({ children }) => {
     }
     // eslint-disable-next-line
   }, [user]);
+
+  useEffect(() => {
+    // eslint-disable-next-line
+  }, [taken]);
 
   return (
     <div>
