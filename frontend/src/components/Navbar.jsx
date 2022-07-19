@@ -26,6 +26,7 @@ const Navbar = () => {
                 className={selected === "home" && "selected"}
                 onClick={() => {
                   setSelected("home");
+                  setHidden(true);
                   nav("/");
                 }}
               >
@@ -36,6 +37,7 @@ const Navbar = () => {
               className={selected === "rules" && "selected"}
               onClick={() => {
                 nav("/rules");
+                setHidden(true);
                 setSelected("rules");
               }}
             >
@@ -47,6 +49,7 @@ const Navbar = () => {
                   className={selected === "championship" && "selected"}
                   onClick={() => {
                     setSelected("championship");
+                    setHidden(true);
                     navigate("/championship");
                   }}
                 >
@@ -56,6 +59,7 @@ const Navbar = () => {
                   className={selected === "friends" && "selected"}
                   onClick={() => {
                     setSelected("friends");
+                    setHidden(true);
                     navigate("/friends");
                   }}
                 >
@@ -68,6 +72,7 @@ const Navbar = () => {
                 onClick={() => {
                   logout();
                   setSelected("home");
+                  setHidden(true);
                   navigate("/");
                 }}
               >
