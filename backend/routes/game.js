@@ -4,6 +4,7 @@ const { find } = require("../middlewares/findUsers");
 const { playing } = require("../middlewares/playing");
 const evaluateRound = require("../utils/evaluateRound");
 const evaluateGame = require("../utils/evaluateGame");
+const conditionalDelete = require("../utils/conditionalDelete");
 const Game = require("../models/game");
 
 //return game data
@@ -65,13 +66,13 @@ router.post(
         username: otherPlayer.username,
       },
     });
-
-    const deleteIfNotStarted = async (id) => {
+    conditionalDelete("started", game._id);
+    /*     const deleteIfNotStarted = async (id) => {
       const gameAgain = await Game.findById(id);
       if (gameAgain && !gameAgain.started) gameAgain.delete();
     };
 
-    setTimeout(() => deleteIfNotStarted(game._id), 40000);
+    setTimeout(() => deleteIfNotStarted(game._id), 40000); */
     return res.status(200).send(game);
   }
 );
@@ -90,13 +91,13 @@ router.post(
       championship: true,
       created: Date.now(),
     });
-
-    const deleteIfNotStarted = async (id) => {
+    conditionalDelete("started", game._id);
+    /*     const deleteIfNotStarted = async (id) => {
       const gameAgain = await Game.findById(id);
       if (gameAgain && !gameAgain.started) gameAgain.delete();
     };
 
-    setTimeout(() => deleteIfNotStarted(game._id), 40000);
+    setTimeout(() => deleteIfNotStarted(game._id), 40000); */
     return res.status(200).send(game);
   }
 );
@@ -134,8 +135,9 @@ router.post("/join", auth({ block: true }), playing(), async (req, res) => {
   game.started = Date.now();
   game.save((err) => {
     if (err) return res.status(500).send(err);
-    res.status(200).send(game);
   });
+  conditionalDelete("finished", game._id);
+  res.status(200).send(game);
 });
 
 //store player picks
