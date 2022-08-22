@@ -5,6 +5,7 @@ const { playing } = require("../middlewares/playing");
 const evaluateRound = require("../utils/evaluateRound");
 const evaluateGame = require("../utils/evaluateGame");
 const conditionalDelete = require("../utils/conditionalDelete");
+const checkRageQuit = require("../utils/checkRageQuit");
 const Game = require("../models/game");
 
 //return game data
@@ -143,6 +144,7 @@ router.post("/join", auth({ block: true }), playing(), async (req, res) => {
 //store player picks
 router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
   let me;
+  let otherPlayer;
   const { round, Pick, Future } = req.body;
   if (!(round && Pick && Future))
     return res.status(400).send("All inputs required!");
@@ -164,8 +166,10 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
 
   if (game.playerOne.id === res.locals.user.userId) {
     me = "playerOne";
+    otherPlayer = "playerTwo";
   } else {
     me = "playerTwo";
+    otherPlayer = "playerOne";
   }
 
   if (
@@ -178,6 +182,10 @@ router.post("/pick/:gameId", auth({ block: true }), async (req, res) => {
       [me + "Pick"]: Pick,
       [me + "Future"]: Future,
     });
+    setTimeout(
+      () => checkRageQuit(req.params.gameId, round, me, otherPlayer),
+      30000
+    );
   } else {
     if (
       game.rounds[round - 1][me + "Pick"] ||
