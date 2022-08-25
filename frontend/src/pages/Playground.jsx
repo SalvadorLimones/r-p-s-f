@@ -20,14 +20,16 @@ const Playground = () => {
 
   const invite = async (id) => {
     const resp = await post("/game/start/friendly", { userId: id });
-    console.log(resp);
+    if (resp.data === "You can't play more than one game in the same time!")
+      navigate("/unfinished");
     if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
   };
 
   const accept = async (id) => {
     const resp = await post("/game/join", { gameId: id });
+    if (resp.data === "You can't play more than one game in the same time!")
+      navigate("/unfinished");
     if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
-    console.log("JOINED GAME: ", resp);
   };
 
   const usersData = (user, i) => {

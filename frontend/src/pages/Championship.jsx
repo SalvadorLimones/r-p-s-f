@@ -13,6 +13,8 @@ const Championship = () => {
   const joinOrCreate = async () => {
     let resp;
     resp = await post("/game/join");
+    if (resp.data === "You can't play more than one game in the same time!")
+      navigate("/unfinished");
     if (resp.status === 404) resp = await post("game/start/championship");
     if (resp.status === 200) navigate("/game/?id=" + resp.data._id);
   };

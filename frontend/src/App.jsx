@@ -10,6 +10,7 @@ import Friends from "./pages/Friends";
 import Game from "./pages/Game";
 import Navbar from "./components/Navbar";
 import Protected from "./components/Protected";
+import UnfinishedGame from "./pages/UnfinishedGame";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <Protected key={"5"}>
               <Game />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          path="/unfinished"
+          element={
+            <Protected key={"6"}>
+              <UnfinishedGame />
             </Protected>
           }
         ></Route>
