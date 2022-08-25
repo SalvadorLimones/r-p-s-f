@@ -13,8 +13,7 @@ const Timer = ({ gameId, round }) => {
         const now = Date.now();
         const secs = (start.current - now) / 1000;
         if (Math.floor(secs) === 0) {
-          clearInterval(id);
-          const resp = post("/game/pick/" + gameId, {
+          post("/game/pick/" + gameId, {
             round: round,
             Pick: "none",
             Future: "none",
@@ -30,7 +29,12 @@ const Timer = ({ gameId, round }) => {
     };
   }, []);
 
-  return <div>Time left: {time}</div>;
+  return (
+    <div>
+      {time >= 0 && `Time left: ${time}`}
+      {time < -4 && "Please wait, the other player might have quitted..."}
+    </div>
+  );
 };
 
 export default Timer;
