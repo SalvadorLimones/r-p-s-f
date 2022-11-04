@@ -6,7 +6,9 @@ The gameplay is accessable after the user registers and logs in, and the user ca
 
 The app utilizes the Google OpenID flow for user authentication, and relies on a MongoDB server for storing user data, as well as information about the games.
 
-[The application is online and playable!](https://starfish-app-2-wy545.ondigitalocean.app/)
+[The application is online and playable!](https://rockpaperscissorsfuture.netlify.app/)
+
+The backend has been deployed to DigitalOcean and uses a DigitalOcean MongoDB database, the frontend has been deployed to Netlify.
 
 ## Frontend
 
